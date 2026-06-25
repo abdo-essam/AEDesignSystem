@@ -58,6 +58,8 @@ internal class AEDefaultIconPack : AEIconPack {
                 "more_horizontal" -> moreHorizontalIcon()
                 "more_vertical" -> moreVerticalIcon()
                 "external_link" -> externalLinkIcon()
+                "play" -> playIcon()
+                "pause" -> pauseIcon()
                 else -> fallbackIcon()
             }
         }
@@ -447,6 +449,21 @@ internal class AEDefaultIconPack : AEIconPack {
             moveTo(18f, 13f); lineTo(18f, 19f); lineTo(5f, 19f); lineTo(5f, 6f); lineTo(11f, 6f)
             moveTo(15f, 3f); lineTo(21f, 3f); lineTo(21f, 9f)
             moveTo(10f, 14f); lineTo(21f, 3f)
+        }
+    }
+
+    private fun playIcon() = icon("play") {
+        stroke {
+            // Triangle pointing right
+            moveTo(8f, 5f); lineTo(19f, 12f); lineTo(8f, 19f); lineTo(8f, 5f)
+        }
+    }
+
+    private fun pauseIcon() = icon("pause") {
+        stroke {
+            // Two vertical bars
+            moveTo(6f, 5f); lineTo(6f, 19f)
+            moveTo(18f, 5f); lineTo(18f, 19f)
         }
     }
 

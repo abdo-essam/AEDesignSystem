@@ -44,6 +44,8 @@ public object AEIcons {
     public val Star: AEIconToken = AEIconToken("star")
     public val Eye: AEIconToken = AEIconToken("eye")
     public val EyeOff: AEIconToken = AEIconToken("eye_off")
+    public val Play: AEIconToken = AEIconToken("play")
+    public val Pause: AEIconToken = AEIconToken("pause")
 
     // ── Chevrons ──
     public val ChevronDown: AEIconToken = AEIconToken("chevron_down")

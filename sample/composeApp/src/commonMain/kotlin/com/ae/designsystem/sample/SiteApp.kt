@@ -23,7 +23,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.ae.designsystem.components.*
 import com.ae.designsystem.foundation.color.AEAccent
@@ -32,6 +31,12 @@ import com.ae.designsystem.foundation.icons.AEIcon
 import com.ae.designsystem.foundation.icons.AEIcons
 import com.ae.designsystem.foundation.theme.AETheme
 import com.ae.designsystem.foundation.tokens.AEStylePreset
+import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.widthIn
+import com.ae.designsystem.sample.components.ExamplesGrid
+import com.ae.designsystem.sample.components.FooterSection
+import com.ae.designsystem.sample.components.HeroSection
+import com.ae.designsystem.sample.components.ThemeToolbar
 import kotlinx.coroutines.launch
 
 enum class SiteRoute(
@@ -97,9 +102,9 @@ fun SiteApp(
                         palette = palette,
                         accent = accent,
                         preset = preset,
-                        onPalette = { newPalette -> palette = newPalette },
-                        onAccent = { newAccent -> accent = newAccent },
-                        onPreset = { newPreset -> preset = newPreset },
+                        onPalette = { newPalette: AEPalette -> palette = newPalette },
+                        onAccent = { newAccent: AEAccent -> accent = newAccent },
+                        onPreset = { newPreset: AEStylePreset -> preset = newPreset },
                         onGoComponents = {
                             route = SiteRoute.Components
                             onNavigate?.invoke(SiteRoute.Components)
@@ -119,6 +124,87 @@ fun SiteApp(
                     SiteRoute.Why -> WhyScreen()
                 }
             }
+        }
+    }
+}
+
+@Composable
+private fun HomeScreen(
+    palette: AEPalette,
+    accent: AEAccent,
+    preset: AEStylePreset,
+    onPalette: (AEPalette) -> Unit,
+    onAccent: (AEAccent) -> Unit,
+    onPreset: (AEStylePreset) -> Unit,
+    onGoComponents: () -> Unit,
+) {
+    val colors = AETheme.colors
+    val spacing = AETheme.spacing
+
+    BoxWithConstraints(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.TopCenter,
+    ) {
+        Column(
+            modifier = Modifier
+                .widthIn(max = 1200.dp)
+                .fillMaxWidth()
+                .padding(horizontal = spacing.lg),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            HeroSection(
+                onCustomizeThemeClick = { },
+                onViewComponentsClick = onGoComponents,
+            )
+
+            Spacer(modifier = Modifier.height(spacing.xl))
+
+            Box(
+                modifier = Modifier.fillMaxWidth(),
+                contentAlignment = Alignment.Center,
+            ) {
+                AEText(
+                    text = "Components in Action",
+                    style = AETheme.typography.headingLarge,
+                )
+            }
+
+            Spacer(modifier = Modifier.height(spacing.xs))
+
+            Box(
+                modifier = Modifier.fillMaxWidth(),
+                contentAlignment = Alignment.Center,
+            ) {
+                AEText(
+                    text = "Explore how AEDesignSystem components work together.",
+                    style = AETheme.typography.bodyLarge,
+                    color = colors.textMuted,
+                )
+            }
+
+            Spacer(modifier = Modifier.height(spacing.lg))
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center,
+            ) {
+                ThemeToolbar(
+                    palette = palette,
+                    onPaletteChange = onPalette,
+                    accent = accent,
+                    onAccentChange = onAccent,
+                    stylePreset = preset,
+                    onStylePresetChange = onPreset,
+                )
+            }
+
+            Spacer(modifier = Modifier.height(spacing.xxl))
+
+            ExamplesGrid()
+
+            Spacer(modifier = Modifier.height(spacing.xxxl))
+
+            FooterSection()
         }
     }
 }
@@ -990,209 +1076,7 @@ private fun MobileMenuItem(
     }
 }
 
-@Composable
-private fun HomeScreen(
-    palette: AEPalette,
-    accent: AEAccent,
-    preset: AEStylePreset,
-    onPalette: (AEPalette) -> Unit,
-    onAccent: (AEAccent) -> Unit,
-    onPreset: (AEStylePreset) -> Unit,
-    onGoComponents: () -> Unit,
-) {
-    val colors = AETheme.colors
-    val spacing = AETheme.spacing
 
-    BoxWithConstraints(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.TopCenter,
-    ) {
-        Column(
-            modifier = Modifier
-                .widthIn(max = 1200.dp)
-                .fillMaxWidth()
-                .padding(horizontal = spacing.lg),
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
-            Spacer(Modifier.height(spacing.xxxl))
-            HeroSection(onGoComponents)
-            Spacer(Modifier.height(spacing.xl))
-            AEText(
-                "Components in Action",
-                style = AETheme.typography.headingLarge,
-            )
-            Spacer(Modifier.height(spacing.xs))
-            AEText(
-                "Explore how AEDesignSystem components work together.",
-                style = AETheme.typography.bodyLarge,
-                color = colors.textMuted,
-            )
-            Spacer(Modifier.height(spacing.lg))
-            ThemeToolbar(
-                palette = palette,
-                onPaletteChange = onPalette,
-                accent = accent,
-                onAccentChange = onAccent,
-                preset = preset,
-                onPresetChange = onPreset,
-            )
-            Spacer(Modifier.height(spacing.xxl))
-            ExamplesGrid()
-            Spacer(Modifier.height(spacing.xxxl))
-            FooterSection()
-        }
-    }
-}
-
-@Composable
-private fun HeroSection(onGoComponents: () -> Unit) {
-    val spacing = AETheme.spacing
-    val colors = AETheme.colors
-
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(spacing.md),
-    ) {
-        AEText(
-            "AEDesignSystem",
-            style = AETheme.typography.displayLarge,
-        )
-        AEText(
-            "A token-driven Compose Multiplatform design system.",
-            style = AETheme.typography.bodyLarge,
-            color = colors.textMuted,
-        )
-        Spacer(Modifier.height(spacing.lg))
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(spacing.sm),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            AEButton(onClick = onGoComponents) {
-                AEText("View Components", color = colors.textOnAccent)
-            }
-            AEButton(onClick = { }, variant = AEButtonVariant.Outlined) {
-                AEText("Get Started", color = colors.accent)
-            }
-        }
-    }
-}
-
-@Composable
-private fun ThemeToolbar(
-    palette: AEPalette,
-    onPaletteChange: (AEPalette) -> Unit,
-    accent: AEAccent,
-    onAccentChange: (AEAccent) -> Unit,
-    preset: AEStylePreset,
-    onPresetChange: (AEStylePreset) -> Unit,
-) {
-    val colors = AETheme.colors
-    val spacing = AETheme.spacing
-
-    AECard {
-        Column(
-            modifier = Modifier.fillMaxWidth().padding(spacing.lg),
-            verticalArrangement = Arrangement.spacedBy(spacing.md),
-        ) {
-            AEText("Palette", style = AETheme.typography.labelMedium, color = colors.textMuted)
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(spacing.sm),
-                modifier = Modifier.horizontalScroll(rememberScrollState()),
-            ) {
-                AEPalette.entries.forEach { p ->
-                    AEChip(label = p.name, selected = p == palette, onClick = { onPaletteChange(p) })
-                }
-            }
-
-            AEText("Accent", style = AETheme.typography.labelMedium, color = colors.textMuted)
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(spacing.sm),
-                modifier = Modifier.horizontalScroll(rememberScrollState()),
-            ) {
-                AEAccent.entries.forEach { a ->
-                    val isSelected = a == accent
-                    Box(
-                        modifier = Modifier
-                            .size(32.dp)
-                            .clip(CircleShape)
-                            .background(a.primary)
-                            .then(
-                                if (isSelected) {
-                                    Modifier.background(colors.surface, CircleShape)
-                                        .padding(2.dp)
-                                        .background(a.primary, CircleShape)
-                                } else {
-                                    Modifier
-                                }
-                            )
-                            .clickable { onAccentChange(a) },
-                    )
-                }
-            }
-
-            AEText("Style Preset", style = AETheme.typography.labelMedium, color = colors.textMuted)
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(spacing.sm),
-                modifier = Modifier.horizontalScroll(rememberScrollState()),
-            ) {
-                AEStylePreset.entries.forEach { s ->
-                    AEChip(label = s.name, selected = s == preset, onClick = { onPresetChange(s) })
-                }
-            }
-        }
-    }
-}
-
-@Composable
-private fun ExamplesGrid() {
-    val spacing = AETheme.spacing
-
-    Column(
-        verticalArrangement = Arrangement.spacedBy(spacing.lg),
-        modifier = Modifier.fillMaxWidth(),
-    ) {
-        AECard {
-            Column(modifier = Modifier.fillMaxWidth().padding(spacing.lg)) {
-                AEText("Example 1", style = AETheme.typography.headingSmall)
-                Spacer(Modifier.height(spacing.sm))
-                AEText(
-                    "This is a placeholder for a component example.",
-                    style = AETheme.typography.bodyMedium,
-                    color = AETheme.colors.textMuted,
-                )
-            }
-        }
-        AECard {
-            Column(modifier = Modifier.fillMaxWidth().padding(spacing.lg)) {
-                AEText("Example 2", style = AETheme.typography.headingSmall)
-                Spacer(Modifier.height(spacing.sm))
-                AEText(
-                    "This is another placeholder for a component example.",
-                    style = AETheme.typography.bodyMedium,
-                    color = AETheme.colors.textMuted,
-                )
-            }
-        }
-    }
-}
-
-@Composable
-private fun FooterSection() {
-    val colors = AETheme.colors
-    val spacing = AETheme.spacing
-
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(spacing.sm),
-    ) {
-        AEText("AEDesignSystem", style = AETheme.typography.headingMedium)
-        AEText(
-            "Built with Compose Multiplatform",
-            style = AETheme.typography.bodyMedium,
-            color = colors.textMuted,
-        )
-    }
-}
 
 @Composable
 private fun WhyScreen() {
@@ -1286,7 +1170,7 @@ private fun CodeLine(text: String) {
     val colors = AETheme.colors
     AEText(
         text,
-        style = AETheme.typography.bodyMedium.copy(fontWeight = FontWeight.Medium),
+        style = AETheme.typography.bodyMedium,
         color = colors.textMuted,
         modifier = Modifier
             .fillMaxWidth()
