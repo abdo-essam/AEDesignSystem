@@ -3,17 +3,27 @@ package com.ae.designsystem.sample
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.hoverable
 import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsHoveredAsState
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.ae.designsystem.components.*
 import com.ae.designsystem.foundation.color.AEAccent
@@ -24,14 +34,36 @@ import com.ae.designsystem.foundation.theme.AETheme
 import com.ae.designsystem.foundation.tokens.AEStylePreset
 import kotlinx.coroutines.launch
 
+enum class SiteRoute(
+    val title: String,
+    val hash: String,
+) {
+    Home(title = "Home", hash = "#/"),
+    Components(title = "Components", hash = "#/components"),
+    Foundation(title = "Foundation", hash = "#/foundation"),
+    Why(title = "Why", hash = "#/why"),
+    ;
+
+    companion object {
+        fun fromHash(hash: String?): SiteRoute {
+            val normalized = (hash ?: "").trim()
+            return entries.firstOrNull { it.hash.equals(normalized, ignoreCase = true) }
+                ?: entries.firstOrNull { normalized.startsWith(it.hash, ignoreCase = true) }
+                ?: Home
+        }
+    }
+}
+
 @Composable
-fun CatalogApp() {
+fun SiteApp(
+    initialRoute: SiteRoute = SiteRoute.Home,
+    onNavigate: ((SiteRoute) -> Unit)? = null,
+) {
     var palette by remember { mutableStateOf(AEPalette.Zinc) }
     var accent by remember { mutableStateOf(AEAccent.Blue) }
     var preset by remember { mutableStateOf(AEStylePreset.Default) }
     var darkMode by remember { mutableStateOf(true) }
-    val snackbarState = rememberSnackbarState()
-    val scope = rememberCoroutineScope()
+    var route by remember { mutableStateOf(initialRoute) }
 
     AETheme(
         palette = palette,
@@ -41,49 +73,109 @@ fun CatalogApp() {
     ) {
         val colors = AETheme.colors
         val spacing = AETheme.spacing
+        val radius = AETheme.radius
 
-        Box(modifier = Modifier.fillMaxSize()) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(colors.background)
-                    .verticalScroll(rememberScrollState())
-                    .padding(spacing.xl),
-                verticalArrangement = Arrangement.spacedBy(spacing.xxl),
-            ) {
-                CatalogHeader(darkMode = darkMode, onToggleDark = { darkMode = !darkMode })
-                ThemeControlsSection(palette, accent, preset, { palette = it }, { accent = it }, { preset = it })
-                AEDivider()
-                ButtonsSection()
-                AEDivider()
-                FormInputsSection()
-                AEDivider()
-                FeedbackSection()
-                AEDivider()
-                Tier3Section()
-                AEDivider()
-                Tier4Section(scope = scope, snackbarState = snackbarState)
-                AEDivider()
-                CardsSection()
-                AEDivider()
-                TypographySection()
-                AEDivider()
-                IconsSection()
-                AEDivider()
-                ColorsSection()
-                Spacer(Modifier.height(spacing.xxxl))
-            }
-
-            // Snackbar host — floats above scroll content
-            AESnackbarHost(
-                state = snackbarState,
-                modifier = Modifier.align(Alignment.BottomCenter),
+        Column(modifier = Modifier.fillMaxSize().background(colors.background)) {
+            TopNavBar(
+                route = route,
+                onRoute = {
+                    route = it
+                    onNavigate?.invoke(it)
+                },
+                darkMode = darkMode,
+                onToggleDark = { darkMode = !darkMode },
+                modifier = Modifier.fillMaxWidth(),
             )
+
+            AEDivider(modifier = Modifier.fillMaxWidth())
+
+            Box(
+                modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()),
+            ) {
+                when (route) {
+                    SiteRoute.Home -> HomeScreen(
+                        palette = palette,
+                        accent = accent,
+                        preset = preset,
+                        onPalette = { newPalette -> palette = newPalette },
+                        onAccent = { newAccent -> accent = newAccent },
+                        onPreset = { newPreset -> preset = newPreset },
+                        onGoComponents = {
+                            route = SiteRoute.Components
+                            onNavigate?.invoke(SiteRoute.Components)
+                        },
+                    )
+                    SiteRoute.Components -> ComponentsScreen(
+                        palette = palette,
+                        accent = accent,
+                        preset = preset,
+                        darkMode = darkMode,
+                        onPalette = { newPalette -> palette = newPalette },
+                        onAccent = { newAccent -> accent = newAccent },
+                        onPreset = { newPreset -> preset = newPreset },
+                        onToggleDark = { darkMode = !darkMode },
+                    )
+                    SiteRoute.Foundation -> FoundationScreen()
+                    SiteRoute.Why -> WhyScreen()
+                }
+            }
         }
     }
 }
 
-// ── Header ──────────────────────────────────────────────────────
+@Composable
+private fun ComponentsScreen(
+    palette: AEPalette,
+    accent: AEAccent,
+    preset: AEStylePreset,
+    darkMode: Boolean,
+    onPalette: (AEPalette) -> Unit,
+    onAccent: (AEAccent) -> Unit,
+    onPreset: (AEStylePreset) -> Unit,
+    onToggleDark: () -> Unit,
+) {
+    val snackbarState = rememberSnackbarState()
+    val scope = rememberCoroutineScope()
+    val colors = AETheme.colors
+    val spacing = AETheme.spacing
+
+    Box(modifier = Modifier.fillMaxSize()) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+                .padding(spacing.xl),
+            verticalArrangement = Arrangement.spacedBy(spacing.xxl),
+        ) {
+            CatalogHeader(darkMode = darkMode, onToggleDark = onToggleDark)
+            ThemeControlsSection(palette, accent, preset, onPalette, onAccent, onPreset)
+            AEDivider()
+            ButtonsSection()
+            AEDivider()
+            FormInputsSection()
+            AEDivider()
+            FeedbackSection()
+            AEDivider()
+            Tier3Section()
+            AEDivider()
+            Tier4Section(scope = scope, snackbarState = snackbarState)
+            AEDivider()
+            CardsSection()
+            AEDivider()
+            TypographySection()
+            AEDivider()
+            IconsSection()
+            AEDivider()
+            ColorsSection()
+            Spacer(Modifier.height(spacing.xxxl))
+        }
+
+        AESnackbarHost(
+            state = snackbarState,
+            modifier = Modifier.align(Alignment.BottomCenter),
+        )
+    }
+}
 
 @Composable
 private fun CatalogHeader(darkMode: Boolean, onToggleDark: () -> Unit) {
@@ -103,8 +195,6 @@ private fun CatalogHeader(darkMode: Boolean, onToggleDark: () -> Unit) {
         }
     }
 }
-
-// ── Theme Controls ───────────────────────────────────────────────
 
 @Composable
 private fun ThemeControlsSection(
@@ -144,8 +234,6 @@ private fun ThemeControlsSection(
         }
     }
 }
-
-// ── Buttons ──────────────────────────────────────────────────────
 
 @Composable
 private fun ButtonsSection() {
@@ -202,8 +290,6 @@ private fun ButtonsSection() {
     }
 }
 
-// ── Form Inputs ──────────────────────────────────────────────────
-
 @Composable
 private fun FormInputsSection() {
     val colors = AETheme.colors
@@ -217,7 +303,7 @@ private fun FormInputsSection() {
     var checked2 by remember { mutableStateOf(false) }
     var switchOn by remember { mutableStateOf(true) }
     var radioSel by remember { mutableStateOf("Option A") }
-    var sliderVal by remember { mutableFloatStateOf(0.4f) }
+    var sliderVal by remember { mutableStateOf(0.4f) }
 
     AECard {
         Column(verticalArrangement = Arrangement.spacedBy(spacing.xl)) {
@@ -266,8 +352,6 @@ private fun FormInputsSection() {
         }
     }
 }
-
-// ── Feedback Components ──────────────────────────────────────────
 
 @Composable
 private fun FeedbackSection() {
@@ -360,8 +444,6 @@ private fun FeedbackSection() {
         }
     }
 }
-
-// ── Tier 3: Avatar · Tabs · BottomSheet ─────────────────────────
 
 @Composable
 private fun Tier3Section() {
@@ -494,8 +576,6 @@ private fun Tier3Section() {
     }
 }
 
-// ── Cards ────────────────────────────────────────────────────────
-
 @Composable
 private fun CardsSection() {
     val colors = AETheme.colors
@@ -535,8 +615,6 @@ private fun CardsSection() {
     }
 }
 
-// ── Typography ───────────────────────────────────────────────────
-
 @Composable
 private fun TypographySection() {
     val colors = AETheme.colors
@@ -561,8 +639,6 @@ private fun TypographySection() {
         }
     }
 }
-
-// ── Icons ────────────────────────────────────────────────────────
 
 @Composable
 private fun IconsSection() {
@@ -606,8 +682,6 @@ private fun IconsSection() {
     }
 }
 
-// ── Colors ───────────────────────────────────────────────────────
-
 @Composable
 private fun ColorsSection() {
     val colors = AETheme.colors
@@ -637,8 +711,6 @@ private fun ColorsSection() {
         }
     }
 }
-
-// ── Tier 4: TopAppBar · NavBar · Snackbar · Dropdown ────────────
 
 @Composable
 private fun Tier4Section(
@@ -681,11 +753,11 @@ private fun Tier4Section(
     AECard {
         AENavigationBar(
             items = listOf(
-                AENavItem(AEIcons.Home,     "Home",    currentNav == 0),
-                AENavItem(AEIcons.Search,   "Explore", currentNav == 1),
-                AENavItem(AEIcons.Heart,    "Saved",   currentNav == 2, badge = 5),
-                AENavItem(AEIcons.Calendar, "Events",  currentNav == 3),
-                AENavItem(AEIcons.User,     "Profile", currentNav == 4),
+                AENavItem(AEIcons.Home, "Home", currentNav == 0),
+                AENavItem(AEIcons.Search, "Explore", currentNav == 1),
+                AENavItem(AEIcons.Heart, "Saved", currentNav == 2, badge = 5),
+                AENavItem(AEIcons.Calendar, "Events", currentNav == 3),
+                AENavItem(AEIcons.User, "Profile", currentNav == 4),
             ),
             onItemSelected = { currentNav = it },
         )
@@ -749,8 +821,6 @@ private fun Tier4Section(
     }
 }
 
-// ── Section title ────────────────────────────────────────────────
-
 @Composable
 private fun SectionTitle(title: String) {
     val colors = AETheme.colors
@@ -759,4 +829,469 @@ private fun SectionTitle(title: String) {
         Box(modifier = Modifier.width(4.dp).height(22.dp).clip(RoundedCornerShape(2.dp)).background(colors.accent))
         AEText(title, style = AETheme.typography.headingMedium)
     }
+}
+
+@Composable
+private fun TopNavBar(
+    route: SiteRoute,
+    onRoute: (SiteRoute) -> Unit,
+    darkMode: Boolean,
+    onToggleDark: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val colors = AETheme.colors
+    val spacing = AETheme.spacing
+    var menuExpanded by remember { mutableStateOf(false) }
+
+    BoxWithConstraints(modifier = modifier.background(colors.surface)) {
+        val isCompact = maxWidth < 640.dp
+
+        Column {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = spacing.lg, vertical = spacing.sm),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween,
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(spacing.sm),
+                ) {
+                    AEText(
+                        text = "AEDesignSystem",
+                        style = AETheme.typography.headingMedium,
+                        color = colors.accent,
+                    )
+
+                    if (!isCompact) {
+                        Spacer(Modifier.width(spacing.md))
+                        LazyRow(horizontalArrangement = Arrangement.spacedBy(spacing.xs)) {
+                            items(SiteRoute.entries) { item ->
+                                AEButton(
+                                    onClick = { onRoute(item) },
+                                    variant = if (item == route) AEButtonVariant.Outlined else AEButtonVariant.Ghost,
+                                    size = AEButtonSize.Small,
+                                ) {
+                                    AEText(item.title)
+                                }
+                            }
+                        }
+                    }
+                }
+
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(spacing.xs),
+                ) {
+                    AEButton(
+                        onClick = onToggleDark,
+                        variant = AEButtonVariant.Ghost,
+                        size = AEButtonSize.Small,
+                    ) {
+                        AEIcon(
+                            if (darkMode) AEIcons.Sun else AEIcons.Moon,
+                            tint = colors.textPrimary,
+                            size = 20.dp,
+                        )
+                    }
+
+                    if (isCompact) {
+                        AEButton(
+                            onClick = { menuExpanded = !menuExpanded },
+                            variant = AEButtonVariant.Ghost,
+                            size = AEButtonSize.Small,
+                        ) {
+                            AEIcon(
+                                if (menuExpanded) AEIcons.Close else AEIcons.Menu,
+                                tint = colors.textPrimary,
+                                size = 20.dp,
+                            )
+                        }
+                    }
+                }
+            }
+
+            if (isCompact && menuExpanded) {
+                AEDivider()
+                MobileMenu(
+                    route = route,
+                    onRoute = {
+                        onRoute(it)
+                        menuExpanded = false
+                    },
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun MobileMenu(
+    route: SiteRoute,
+    onRoute: (SiteRoute) -> Unit,
+) {
+    val colors = AETheme.colors
+    val spacing = AETheme.spacing
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(colors.surface)
+            .padding(horizontal = spacing.lg, vertical = spacing.sm),
+        verticalArrangement = Arrangement.spacedBy(spacing.xs),
+    ) {
+        SiteRoute.entries.forEach { item ->
+            MobileMenuItem(
+                label = item.title,
+                selected = item == route,
+                onClick = { onRoute(item) },
+            )
+        }
+    }
+}
+
+@Composable
+private fun MobileMenuItem(
+    label: String,
+    selected: Boolean,
+    onClick: () -> Unit,
+) {
+    val colors = AETheme.colors
+    val spacing = AETheme.spacing
+    val radius = AETheme.radius
+    val interactionSource = remember { MutableInteractionSource() }
+    val isHovered by interactionSource.collectIsHoveredAsState()
+
+    val bg = when {
+        selected -> colors.surfaceHover
+        isHovered -> colors.surfaceHover.copy(alpha = 0.5f)
+        else -> colors.surface
+    }
+
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(radius.md))
+            .background(bg)
+            .hoverable(interactionSource)
+            .clickable(
+                interactionSource = interactionSource,
+                indication = null,
+                onClick = onClick,
+            )
+            .padding(horizontal = spacing.md, vertical = spacing.sm),
+    ) {
+        AEText(
+            text = label,
+            style = if (selected) AETheme.typography.labelLarge else AETheme.typography.bodyMedium,
+            color = if (selected) colors.accent else colors.textPrimary,
+        )
+    }
+}
+
+@Composable
+private fun HomeScreen(
+    palette: AEPalette,
+    accent: AEAccent,
+    preset: AEStylePreset,
+    onPalette: (AEPalette) -> Unit,
+    onAccent: (AEAccent) -> Unit,
+    onPreset: (AEStylePreset) -> Unit,
+    onGoComponents: () -> Unit,
+) {
+    val colors = AETheme.colors
+    val spacing = AETheme.spacing
+
+    BoxWithConstraints(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.TopCenter,
+    ) {
+        Column(
+            modifier = Modifier
+                .widthIn(max = 1200.dp)
+                .fillMaxWidth()
+                .padding(horizontal = spacing.lg),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            Spacer(Modifier.height(spacing.xxxl))
+            HeroSection(onGoComponents)
+            Spacer(Modifier.height(spacing.xl))
+            AEText(
+                "Components in Action",
+                style = AETheme.typography.headingLarge,
+            )
+            Spacer(Modifier.height(spacing.xs))
+            AEText(
+                "Explore how AEDesignSystem components work together.",
+                style = AETheme.typography.bodyLarge,
+                color = colors.textMuted,
+            )
+            Spacer(Modifier.height(spacing.lg))
+            ThemeToolbar(
+                palette = palette,
+                onPaletteChange = onPalette,
+                accent = accent,
+                onAccentChange = onAccent,
+                preset = preset,
+                onPresetChange = onPreset,
+            )
+            Spacer(Modifier.height(spacing.xxl))
+            ExamplesGrid()
+            Spacer(Modifier.height(spacing.xxxl))
+            FooterSection()
+        }
+    }
+}
+
+@Composable
+private fun HeroSection(onGoComponents: () -> Unit) {
+    val spacing = AETheme.spacing
+    val colors = AETheme.colors
+
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(spacing.md),
+    ) {
+        AEText(
+            "AEDesignSystem",
+            style = AETheme.typography.displayLarge,
+        )
+        AEText(
+            "A token-driven Compose Multiplatform design system.",
+            style = AETheme.typography.bodyLarge,
+            color = colors.textMuted,
+        )
+        Spacer(Modifier.height(spacing.lg))
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(spacing.sm),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            AEButton(onClick = onGoComponents) {
+                AEText("View Components", color = colors.textOnAccent)
+            }
+            AEButton(onClick = { }, variant = AEButtonVariant.Outlined) {
+                AEText("Get Started", color = colors.accent)
+            }
+        }
+    }
+}
+
+@Composable
+private fun ThemeToolbar(
+    palette: AEPalette,
+    onPaletteChange: (AEPalette) -> Unit,
+    accent: AEAccent,
+    onAccentChange: (AEAccent) -> Unit,
+    preset: AEStylePreset,
+    onPresetChange: (AEStylePreset) -> Unit,
+) {
+    val colors = AETheme.colors
+    val spacing = AETheme.spacing
+
+    AECard {
+        Column(
+            modifier = Modifier.fillMaxWidth().padding(spacing.lg),
+            verticalArrangement = Arrangement.spacedBy(spacing.md),
+        ) {
+            AEText("Palette", style = AETheme.typography.labelMedium, color = colors.textMuted)
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(spacing.sm),
+                modifier = Modifier.horizontalScroll(rememberScrollState()),
+            ) {
+                AEPalette.entries.forEach { p ->
+                    AEChip(label = p.name, selected = p == palette, onClick = { onPaletteChange(p) })
+                }
+            }
+
+            AEText("Accent", style = AETheme.typography.labelMedium, color = colors.textMuted)
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(spacing.sm),
+                modifier = Modifier.horizontalScroll(rememberScrollState()),
+            ) {
+                AEAccent.entries.forEach { a ->
+                    val isSelected = a == accent
+                    Box(
+                        modifier = Modifier
+                            .size(32.dp)
+                            .clip(CircleShape)
+                            .background(a.primary)
+                            .then(
+                                if (isSelected) {
+                                    Modifier.background(colors.surface, CircleShape)
+                                        .padding(2.dp)
+                                        .background(a.primary, CircleShape)
+                                } else {
+                                    Modifier
+                                }
+                            )
+                            .clickable { onAccentChange(a) },
+                    )
+                }
+            }
+
+            AEText("Style Preset", style = AETheme.typography.labelMedium, color = colors.textMuted)
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(spacing.sm),
+                modifier = Modifier.horizontalScroll(rememberScrollState()),
+            ) {
+                AEStylePreset.entries.forEach { s ->
+                    AEChip(label = s.name, selected = s == preset, onClick = { onPresetChange(s) })
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun ExamplesGrid() {
+    val spacing = AETheme.spacing
+
+    Column(
+        verticalArrangement = Arrangement.spacedBy(spacing.lg),
+        modifier = Modifier.fillMaxWidth(),
+    ) {
+        AECard {
+            Column(modifier = Modifier.fillMaxWidth().padding(spacing.lg)) {
+                AEText("Example 1", style = AETheme.typography.headingSmall)
+                Spacer(Modifier.height(spacing.sm))
+                AEText(
+                    "This is a placeholder for a component example.",
+                    style = AETheme.typography.bodyMedium,
+                    color = AETheme.colors.textMuted,
+                )
+            }
+        }
+        AECard {
+            Column(modifier = Modifier.fillMaxWidth().padding(spacing.lg)) {
+                AEText("Example 2", style = AETheme.typography.headingSmall)
+                Spacer(Modifier.height(spacing.sm))
+                AEText(
+                    "This is another placeholder for a component example.",
+                    style = AETheme.typography.bodyMedium,
+                    color = AETheme.colors.textMuted,
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun FooterSection() {
+    val colors = AETheme.colors
+    val spacing = AETheme.spacing
+
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(spacing.sm),
+    ) {
+        AEText("AEDesignSystem", style = AETheme.typography.headingMedium)
+        AEText(
+            "Built with Compose Multiplatform",
+            style = AETheme.typography.bodyMedium,
+            color = colors.textMuted,
+        )
+    }
+}
+
+@Composable
+private fun WhyScreen() {
+    val colors = AETheme.colors
+    val spacing = AETheme.spacing
+
+    Column(
+        modifier = Modifier
+            .widthIn(max = 800.dp)
+            .padding(spacing.xl)
+            .fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(spacing.lg),
+    ) {
+        AEText("Why AEDesignSystem?", style = AETheme.typography.displayMedium)
+        AECard {
+            Column(
+                modifier = Modifier.fillMaxWidth().padding(spacing.xl),
+                verticalArrangement = Arrangement.spacedBy(spacing.lg),
+            ) {
+                AEText("Token-Driven Design", style = AETheme.typography.headingMedium)
+                AEText(
+                    "AEDesignSystem uses design tokens for colors, spacing, typography, and more, ensuring consistency across platforms.",
+                    style = AETheme.typography.bodyLarge,
+                    color = colors.textMuted,
+                )
+            }
+        }
+        AECard {
+            Column(
+                modifier = Modifier.fillMaxWidth().padding(spacing.xl),
+                verticalArrangement = Arrangement.spacedBy(spacing.lg),
+            ) {
+                AEText("Compose Multiplatform", style = AETheme.typography.headingMedium)
+                AEText(
+                    "Built for Compose Multiplatform, AEDesignSystem works on Android, Desktop, and Web (Wasm).",
+                    style = AETheme.typography.bodyLarge,
+                    color = colors.textMuted,
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun FoundationScreen() {
+    val colors = AETheme.colors
+    val spacing = AETheme.spacing
+
+    Column(
+        modifier = Modifier
+            .widthIn(max = 800.dp)
+            .padding(spacing.xl)
+            .fillMaxWidth(),
+        verticalArrangement = Arrangement.spacedBy(spacing.lg),
+    ) {
+        AEText("Foundation", style = AETheme.typography.headingLarge)
+        AEText(
+            "This section highlights design tokens and base primitives used across components.",
+            style = AETheme.typography.bodyLarge,
+            color = colors.textMuted,
+        )
+
+        AECard {
+            Column(
+                modifier = Modifier.fillMaxWidth().padding(spacing.lg),
+                verticalArrangement = Arrangement.spacedBy(spacing.sm),
+            ) {
+                AEText("Colors", style = AETheme.typography.headingSmall)
+                AEText("Background: ${colors.background}", style = AETheme.typography.bodyMedium, color = colors.textMuted)
+                AEText("Surface: ${colors.surface}", style = AETheme.typography.bodyMedium, color = colors.textMuted)
+                AEText("Accent: ${colors.accent}", style = AETheme.typography.bodyMedium, color = colors.textMuted)
+            }
+        }
+
+        AECard {
+            Column(
+                modifier = Modifier.fillMaxWidth().padding(spacing.lg),
+                verticalArrangement = Arrangement.spacedBy(spacing.sm),
+            ) {
+                AEText("Typography", style = AETheme.typography.headingSmall)
+                AEText("Display Medium", style = AETheme.typography.displayMedium)
+                AEText("Body Medium", style = AETheme.typography.bodyMedium, color = colors.textMuted)
+            }
+        }
+    }
+}
+
+@Composable
+private fun CodeLine(text: String) {
+    val colors = AETheme.colors
+    AEText(
+        text,
+        style = AETheme.typography.bodyMedium.copy(fontWeight = FontWeight.Medium),
+        color = colors.textMuted,
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(enabled = false) {}
+            .background(colors.surface)
+            .padding(12.dp),
+    )
 }
