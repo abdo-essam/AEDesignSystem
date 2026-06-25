@@ -7,6 +7,7 @@ plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
+    alias(libs.plugins.kotlinSerialization)
 }
 
 android {
@@ -52,6 +53,10 @@ kotlin {
                 implementation(compose.components.resources)
                 implementation(projects.foundation)
                 implementation(projects.components)
+                implementation(libs.androidx.lifecycle.viewmodelCompose)
+                implementation(libs.androidx.lifecycle.runtimeCompose)
+                implementation(libs.navigation.compose)
+                implementation(libs.kotlinx.serialization.json)
             }
         }
         val desktopMain by getting {
