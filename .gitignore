@@ -69,3 +69,6 @@ obj/
 *.log
 .kotlin/
 kotlin-js-store/
+
+Engineering Standards.md
+Mobile Engineering Standards.md
