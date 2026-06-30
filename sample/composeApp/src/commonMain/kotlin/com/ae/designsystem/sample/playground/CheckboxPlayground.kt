@@ -2,7 +2,8 @@ package com.ae.designsystem.sample.playground
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.*
-import com.ae.designsystem.components.*
+import com.ae.designsystem.components.ui.checkbox.AECheckbox
+import com.ae.designsystem.components.ui.switch.AESwitch
 import com.ae.designsystem.foundation.theme.AETheme
 
 /** Playground for [AECheckbox] — toggles checked, enabled, and label. */

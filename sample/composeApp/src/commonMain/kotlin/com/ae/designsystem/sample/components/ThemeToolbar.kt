@@ -15,9 +15,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
-import com.ae.designsystem.components.AECard
-import com.ae.designsystem.components.AEChip
-import com.ae.designsystem.components.AEText
+import com.ae.designsystem.components.ui.card.AECard
+import com.ae.designsystem.components.ui.chip.AEChip
+import com.ae.designsystem.components.ui.text.AEText
 import com.ae.designsystem.foundation.color.AEAccent
 import com.ae.designsystem.foundation.color.AEPalette
 import com.ae.designsystem.foundation.theme.AETheme

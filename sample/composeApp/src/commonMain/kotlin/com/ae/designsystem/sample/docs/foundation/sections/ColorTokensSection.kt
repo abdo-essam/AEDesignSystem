@@ -9,7 +9,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
-import com.ae.designsystem.components.*
+import com.ae.designsystem.components.ui.card.AECard
+import com.ae.designsystem.components.ui.divider.AEDivider
+import com.ae.designsystem.components.ui.text.AEText
 import com.ae.designsystem.foundation.theme.AETheme
 
 @Composable

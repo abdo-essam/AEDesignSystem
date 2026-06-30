@@ -4,7 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.ae.designsystem.components.AEText
+import com.ae.designsystem.components.ui.text.AEText
 import com.ae.designsystem.foundation.theme.AETheme
 
 @Composable

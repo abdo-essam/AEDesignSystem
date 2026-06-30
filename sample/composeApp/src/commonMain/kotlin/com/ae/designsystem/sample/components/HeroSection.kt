@@ -10,11 +10,11 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import com.ae.designsystem.components.AEButton
-import com.ae.designsystem.components.AEButtonVariant
-import com.ae.designsystem.components.AEBadge
-import com.ae.designsystem.components.AEBadgeVariant
-import com.ae.designsystem.components.AEText
+import com.ae.designsystem.components.ui.button.AEButton
+import com.ae.designsystem.components.ui.button.AEButtonVariant
+import com.ae.designsystem.components.ui.badge.AEBadge
+import com.ae.designsystem.components.ui.badge.AEBadgeVariant
+import com.ae.designsystem.components.ui.text.AEText
 import com.ae.designsystem.foundation.theme.AETheme
 
 @OptIn(ExperimentalLayoutApi::class)

@@ -1,7 +1,7 @@
 package com.ae.designsystem.sample.playground
 
 import androidx.compose.runtime.Composable
-import com.ae.designsystem.components.AEText
+import com.ae.designsystem.components.ui.text.AEText
 import com.ae.designsystem.foundation.theme.AETheme
 
 /** Reusable section label for playground control panels. */

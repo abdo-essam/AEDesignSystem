@@ -16,7 +16,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.ae.designsystem.components.AEText
+import com.ae.designsystem.components.ui.text.AEText
 import com.ae.designsystem.foundation.theme.AETheme
 import com.ae.designsystem.sample.components.ExamplesGrid
 import com.ae.designsystem.sample.components.FooterSection

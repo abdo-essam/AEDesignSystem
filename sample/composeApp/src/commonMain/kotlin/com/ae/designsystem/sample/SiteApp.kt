@@ -33,11 +33,11 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.ae.designsystem.components.AEButton
-import com.ae.designsystem.components.AEButtonSize
-import com.ae.designsystem.components.AEButtonVariant
-import com.ae.designsystem.components.AEDivider
-import com.ae.designsystem.components.AEText
+import com.ae.designsystem.components.ui.button.AEButton
+import com.ae.designsystem.components.ui.button.AEButtonSize
+import com.ae.designsystem.components.ui.button.AEButtonVariant
+import com.ae.designsystem.components.ui.divider.AEDivider
+import com.ae.designsystem.components.ui.text.AEText
 import com.ae.designsystem.foundation.color.AEPalette
 import com.ae.designsystem.foundation.icons.AEIcon
 import com.ae.designsystem.foundation.icons.AEIcons

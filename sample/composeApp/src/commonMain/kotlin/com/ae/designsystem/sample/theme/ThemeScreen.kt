@@ -12,7 +12,13 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
-import com.ae.designsystem.components.*
+import com.ae.designsystem.components.ui.button.AEButton
+import com.ae.designsystem.components.ui.button.AEButtonVariant
+import com.ae.designsystem.components.ui.card.AECard
+import com.ae.designsystem.components.ui.chip.AEChip
+import com.ae.designsystem.components.ui.divider.AEDivider
+import com.ae.designsystem.components.ui.switch.AESwitch
+import com.ae.designsystem.components.ui.text.AEText
 import com.ae.designsystem.foundation.color.AEAccent
 import com.ae.designsystem.foundation.color.AEPalette
 import com.ae.designsystem.foundation.theme.AETheme

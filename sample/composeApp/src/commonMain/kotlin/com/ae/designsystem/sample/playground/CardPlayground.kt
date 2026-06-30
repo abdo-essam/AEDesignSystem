@@ -2,7 +2,11 @@ package com.ae.designsystem.sample.playground
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.*
-import com.ae.designsystem.components.*
+import com.ae.designsystem.components.ui.button.AEButton
+import com.ae.designsystem.components.ui.button.AEButtonSize
+import com.ae.designsystem.components.ui.card.AECard
+import com.ae.designsystem.components.ui.switch.AESwitch
+import com.ae.designsystem.components.ui.text.AEText
 import com.ae.designsystem.foundation.theme.AETheme
 
 /** Playground for [AECard] — toggles header, footer, and content text. */

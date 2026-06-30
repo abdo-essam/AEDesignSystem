@@ -31,3 +31,5 @@ dependencyResolutionManagement {
 include(":foundation")
 include(":components")
 include(":sample:composeApp")
+include(":cli")
+

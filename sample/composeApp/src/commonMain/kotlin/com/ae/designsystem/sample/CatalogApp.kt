@@ -5,9 +5,9 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import com.ae.designsystem.components.AESnackbarHost
-import com.ae.designsystem.components.AETabs
-import com.ae.designsystem.components.rememberSnackbarState
+import com.ae.designsystem.components.ui.snackbar.AESnackbarHost
+import com.ae.designsystem.components.ui.tabs.AETabs
+import com.ae.designsystem.components.ui.snackbar.rememberSnackbarState
 import com.ae.designsystem.foundation.theme.AETheme
 import com.ae.designsystem.sample.docs.AboutScreen
 import com.ae.designsystem.sample.docs.GettingStartedScreen

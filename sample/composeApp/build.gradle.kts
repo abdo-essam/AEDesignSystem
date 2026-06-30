@@ -10,6 +10,77 @@ plugins {
     alias(libs.plugins.kotlinSerialization)
 }
 
+// ---------------------------------------------------------------------------
+// API Reference generation: reads KDocs from component sources and writes
+// AEDESIGNSYSTEM_REFERENCE.md for AI agents and developers.
+// ---------------------------------------------------------------------------
+val generateApiReference by tasks.registering(GenerateApiReferenceTask::class) {
+    componentsUiDir.set(
+        layout.projectDirectory.dir(
+            "../../components/src/commonMain/kotlin/com/ae/designsystem/components/ui",
+        ),
+    )
+    foundationDir.set(
+        layout.projectDirectory.dir(
+            "../../foundation/src/commonMain/kotlin/com/ae/designsystem/foundation",
+        ),
+    )
+    registrySourceFile.set(
+        layout.projectDirectory.file(
+            "src/commonMain/kotlin/com/ae/designsystem/sample/docs/catalog/ComponentRegistry.kt",
+        ),
+    )
+    outputFile.set(
+        layout.projectDirectory.file("../../AEDESIGNSYSTEM_REFERENCE.md"),
+    )
+}
+
+// ---------------------------------------------------------------------------
+// Registry JSON generation: reads component .kt files, outputs static JSON
+// to /r/ so the website and CLI share one source of truth.
+// ---------------------------------------------------------------------------
+val generateRegistryJson by tasks.registering(GenerateRegistryJsonTask::class) {
+    componentsUiDir.set(
+        layout.projectDirectory.dir(
+            "../../components/src/commonMain/kotlin/com/ae/designsystem/components/ui",
+        ),
+    )
+    registrySourceFile.set(
+        layout.projectDirectory.file(
+            "src/commonMain/kotlin/com/ae/designsystem/sample/docs/catalog/ComponentRegistry.kt",
+        ),
+    )
+    outputDir.set(
+        layout.projectDirectory.dir("src/wasmJsMain/resources/r"),
+    )
+    foundationVersion.set(
+        providers.gradleProperty("VERSION_NAME"),
+    )
+}
+
+tasks.matching { it.name.contains("wasmJsBrowser") && it.name.contains("Distribution") }.configureEach {
+    dependsOn(generateRegistryJson)
+}
+
+tasks.matching { it.name == "wasmJsProcessResources" }.configureEach {
+    dependsOn(generateRegistryJson)
+}
+
+val generateComponentSources by tasks.registering(GenerateComponentSourcesTask::class) {
+    componentsUiDir.set(
+        layout.projectDirectory.dir(
+            "../../components/src/commonMain/kotlin/com/ae/designsystem/components/ui",
+        ),
+    )
+    outputDir.set(
+        layout.buildDirectory.dir("generated/componentSources/kotlin"),
+    )
+}
+
+
+
+
+
 android {
     namespace = "com.ae.designsystem.sample"
     compileSdk = 35
@@ -45,6 +116,7 @@ kotlin {
 
     sourceSets {
         commonMain {
+            kotlin.srcDir(generateComponentSources.flatMap { it.outputDir })
             dependencies {
                 implementation(compose.runtime)
                 implementation(compose.foundation)

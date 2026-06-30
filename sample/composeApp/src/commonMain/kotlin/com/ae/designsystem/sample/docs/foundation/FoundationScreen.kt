@@ -6,7 +6,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import com.ae.designsystem.components.AETabs
+import com.ae.designsystem.components.ui.tabs.AETabs
 import com.ae.designsystem.foundation.theme.AETheme
 import com.ae.designsystem.sample.docs.foundation.sections.*
 

@@ -6,7 +6,12 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.ae.designsystem.components.*
+import com.ae.designsystem.components.ui.button.AEButton
+import com.ae.designsystem.components.ui.button.AEButtonSize
+import com.ae.designsystem.components.ui.card.AECard
+import com.ae.designsystem.components.ui.divider.AEDivider
+import com.ae.designsystem.components.ui.surface.AESurface
+import com.ae.designsystem.components.ui.text.AEText
 import com.ae.designsystem.foundation.icons.AEIcon
 import com.ae.designsystem.foundation.icons.AEIcons
 import com.ae.designsystem.foundation.theme.AETheme

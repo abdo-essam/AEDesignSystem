@@ -7,7 +7,10 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import com.ae.designsystem.components.*
+import com.ae.designsystem.components.ui.badge.AEBadge
+import com.ae.designsystem.components.ui.card.AECard
+import com.ae.designsystem.components.ui.divider.AEDivider
+import com.ae.designsystem.components.ui.text.AEText
 import com.ae.designsystem.foundation.theme.AETheme
 
 /**
