@@ -9,6 +9,7 @@ import com.ae.designsystem.components.ui.skeleton.AESkeletonListItem
 import com.ae.designsystem.sample.docs.catalog.ComponentFamilies
 import com.ae.designsystem.sample.docs.components.*
 import com.ae.designsystem.foundation.theme.AETheme
+import androidx.compose.foundation.shape.RoundedCornerShape
 
 @Composable
 fun SkeletonDoc() {

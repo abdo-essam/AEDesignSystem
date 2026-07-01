@@ -17,11 +17,13 @@ import org.jetbrains.compose.resources.stringResource
 import aedesignsystem.sample.composeapp.generated.resources.Res
 import aedesignsystem.sample.composeapp.generated.resources.docs_search_placeholder
 import aedesignsystem.sample.composeapp.generated.resources.docs_components
+import aedesignsystem.sample.composeapp.generated.resources.docs_getting_started
 import com.ae.designsystem.components.ui.textfield.AETextField
 import com.ae.designsystem.components.ui.text.AEText
 import com.ae.designsystem.sample.docs.catalog.ComponentCategory
 import com.ae.designsystem.sample.docs.catalog.ComponentEntry
 import com.ae.designsystem.foundation.theme.AETheme
+import androidx.compose.foundation.shape.RoundedCornerShape
 
 @Composable
 fun DocsSidebar(
@@ -45,6 +47,34 @@ fun DocsSidebar(
         )
 
         val query = searchQuery.trim().lowercase()
+
+        // ─── Getting Started ───────────────────────────────
+        val filteredGuides = if (query.isEmpty()) {
+            com.ae.designsystem.sample.docs.catalog.guidePages
+        } else {
+            com.ae.designsystem.sample.docs.catalog.guidePages.filter { page ->
+                page.id.lowercase().contains(query)
+            }
+        }
+
+        if (filteredGuides.isNotEmpty()) {
+            AEText(
+                text = stringResource(Res.string.docs_getting_started),
+                style = AETheme.typography.headingSmall.copy(color = AETheme.colors.accent),
+            )
+
+            Spacer(Modifier.height(AETheme.spacing.xs))
+
+            filteredGuides.forEach { page ->
+                SidebarItem(
+                    name = stringResource(page.nameRes),
+                    isSelected = page.id == selectedId,
+                    onClick = { onSelect(page.id) },
+                )
+            }
+
+            Spacer(Modifier.height(AETheme.spacing.lg))
+        }
 
         // ─── Components ────────────────────────────────────
         val filteredGrouped = if (query.isEmpty()) {

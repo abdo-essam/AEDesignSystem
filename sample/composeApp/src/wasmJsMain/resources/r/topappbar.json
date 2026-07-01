@@ -1,0 +1,24 @@
+{
+  "name": "topappbar",
+  "type": "registry:component",
+  "title": "TopAppBar",
+  "description": "Header bar navigation layouts.",
+  "category": "Navigation",
+  "version": "0.1.0",
+  "registryDependencies": [
+    "button",
+    "divider",
+    "text"
+  ],
+  "gradleDependencies": [
+    "com.ae.designsystem:foundation:0.1.0"
+  ],
+  "files": [
+    {
+      "name": "AETopAppBar.kt",
+      "path": "ui/topappbar/AETopAppBar.kt",
+      "type": "registry:component",
+      "content": "package com.ae.designsystem.components.ui.topappbar\n\nimport androidx.compose.foundation.background\nimport androidx.compose.foundation.layout.*\nimport androidx.compose.runtime.Composable\nimport androidx.compose.ui.Alignment\nimport androidx.compose.ui.Modifier\nimport androidx.compose.ui.draw.shadow\nimport androidx.compose.ui.unit.dp\nimport com.ae.designsystem.foundation.icons.AEIcon\nimport com.ae.designsystem.foundation.icons.AEIconToken\nimport com.ae.designsystem.foundation.icons.AEIcons\nimport com.ae.designsystem.foundation.theme.AETheme\nimport com.ae.designsystem.components.ui.button.AEButton\nimport com.ae.designsystem.components.ui.button.AEButtonSize\nimport com.ae.designsystem.components.ui.button.AEButtonVariant\nimport com.ae.designsystem.components.ui.divider.AEDivider\nimport com.ae.designsystem.components.ui.text.AEText\n\n/**\n * Top app bar — slot-based with navigation icon, title, and actions row.\n *\n * ```\n * AETopAppBar(\n *     title = \"Settings\",\n *     navigationIcon = AEIcons.ArrowLeft,\n *     onNavigationClick = { navController.popBackStack() },\n *     actions = {\n *         AEButton(onClick = { }, variant = AEButtonVariant.Ghost) {\n *             AEIcon(AEIcons.Search, tint = AETheme.colors.textPrimary, size = 20.dp)\n *         }\n *     },\n * )\n * ```\n *\n * @param title Title string shown in the center/start of the bar.\n * @param navigationIcon Optional leading icon token (e.g. back arrow).\n * @param onNavigationClick Called when [navigationIcon] is tapped.\n * @param actions Slot for trailing action buttons.\n * @param elevated Whether to draw a shadow beneath the bar.\n */\n@Composable\npublic fun AETopAppBar(\n    title: String,\n    modifier: Modifier = Modifier,\n    navigationIcon: AEIconToken? = null,\n    onNavigationClick: (() -> Unit)? = null,\n    actions: (@Composable RowScope.() -> Unit)? = null,\n    elevated: Boolean = false,\n) {\n    val colors = AETheme.colors\n    val spacing = AETheme.spacing\n    val elevation = AETheme.elevation\n\n    Box(\n        modifier = modifier\n            .fillMaxWidth()\n            .then(if (elevated) Modifier.shadow(elevation.sm) else Modifier)\n            .background(colors.surface)\n            .windowInsetsPadding(WindowInsets.statusBars)\n            .height(56.dp),\n        contentAlignment = Alignment.Center,\n    ) {\n        // Navigation icon — start\n        if (navigationIcon != null) {\n            Box(\n                modifier = Modifier\n                    .align(Alignment.CenterStart)\n                    .padding(start = spacing.sm),\n            ) {\n                AEButton(\n                    onClick = { onNavigationClick?.invoke() },\n                    variant = AEButtonVariant.Ghost,\n                    size = AEButtonSize.Small,\n                ) {\n                    AEIcon(token = navigationIcon, tint = colors.textPrimary, size = 22.dp)\n                }\n            }\n        }\n\n        // Title — center\n        AEText(\n            text = title,\n            style = AETheme.typography.headingSmall,\n            color = colors.textPrimary,\n        )\n\n        // Actions — end\n        if (actions != null) {\n            Row(\n                modifier = Modifier\n                    .align(Alignment.CenterEnd)\n                    .padding(end = spacing.sm),\n                verticalAlignment = Alignment.CenterVertically,\n                content = actions,\n            )\n        }\n    }\n\n    AEDivider()\n}"
+    }
+  ]
+}

@@ -21,6 +21,7 @@ import androidx.compose.ui.text.TextStyle
 import org.jetbrains.compose.resources.stringResource
 import com.ae.designsystem.sample.docs.catalog.ComponentEntry
 import com.ae.designsystem.foundation.theme.AETheme
+import androidx.compose.foundation.shape.RoundedCornerShape
 
 @Composable
 fun CompactSelector(
@@ -36,6 +37,14 @@ fun CompactSelector(
             .horizontalScroll(scrollState),
         horizontalArrangement = Arrangement.spacedBy(AETheme.spacing.xs),
     ) {
+        com.ae.designsystem.sample.docs.catalog.guidePages.forEach { page ->
+            CompactChip(
+                text = stringResource(page.nameRes),
+                isActive = page.id == selectedId,
+                onClick = { onSelect(page.id) },
+            )
+        }
+
         entries.forEach { entry ->
             CompactChip(
                 text = stringResource(entry.nameRes),

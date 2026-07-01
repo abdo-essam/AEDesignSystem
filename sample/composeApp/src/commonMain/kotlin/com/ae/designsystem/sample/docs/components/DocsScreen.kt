@@ -11,10 +11,21 @@ import com.ae.designsystem.foundation.theme.AETheme
 import com.ae.designsystem.sample.docs.catalog.ComponentRegistry
 
 @Composable
-internal fun ComponentsScreen(modifier: Modifier = Modifier) {
-    var selectedId by remember { mutableStateOf("button") }
+fun DocsScreen(
+    initialComponentId: String? = null,
+    onPageSelected: (String) -> Unit = {},
+    modifier: Modifier = Modifier
+) {
+    var selectedId by remember(initialComponentId) {
+        mutableStateOf(initialComponentId ?: com.ae.designsystem.sample.docs.catalog.GuideIds.INTRODUCTION)
+    }
 
-    CompositionLocalProvider(LocalDocNavigation provides { selectedId = it }) {
+    val onSelect: (String) -> Unit = { id ->
+        selectedId = id
+        onPageSelected(id)
+    }
+
+    CompositionLocalProvider(LocalDocNavigation provides onSelect) {
         BoxWithConstraints(
             modifier = modifier
                 .fillMaxSize()
@@ -25,12 +36,12 @@ internal fun ComponentsScreen(modifier: Modifier = Modifier) {
             if (isWide) {
                 WideLayout(
                     selectedId = selectedId,
-                    onSelect = { selectedId = it }
+                    onSelect = onSelect
                 )
             } else {
                 CompactLayout(
                     selectedId = selectedId,
-                    onSelect = { selectedId = it }
+                    onSelect = onSelect
                 )
             }
         }

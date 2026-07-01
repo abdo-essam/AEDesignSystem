@@ -32,6 +32,7 @@ import com.ae.designsystem.components.ui.button.AEButtonSize
 import com.ae.designsystem.components.ui.button.AEButtonVariant
 import com.ae.designsystem.components.ui.text.AEText
 import com.ae.designsystem.foundation.theme.AETheme
+import androidx.compose.foundation.shape.RoundedCornerShape
 
 @Composable
 fun SourceCodeViewer(componentId: String) {

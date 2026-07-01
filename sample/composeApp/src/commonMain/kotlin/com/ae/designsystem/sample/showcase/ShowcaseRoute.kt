@@ -8,6 +8,7 @@ import com.ae.designsystem.sample.app.LocalAppState
 
 @Composable
 fun ShowcaseRoute(
+    onNavigateToCreator: () -> Unit,
     onNavigateToComponents: () -> Unit,
     viewModel: ShowcaseViewModel = viewModel { ShowcaseViewModel() },
 ) {
@@ -18,6 +19,7 @@ fun ShowcaseRoute(
         state = state,
         isDark = appState.isDark,
         onAction = viewModel::onAction,
+        onNavigateToCreator = onNavigateToCreator,
         onNavigateToComponents = onNavigateToComponents,
     )
 }

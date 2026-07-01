@@ -29,6 +29,7 @@ fun ShowcaseScreen(
     state: ShowcaseState,
     isDark: Boolean,
     onAction: (ShowcaseAction) -> Unit,
+    onNavigateToCreator: () -> Unit,
     onNavigateToComponents: () -> Unit,
 ) {
     val scrollState = rememberScrollState()
@@ -55,7 +56,7 @@ fun ShowcaseScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             HeroSection(
-                onCustomizeThemeClick = { },
+                onCustomizeThemeClick = onNavigateToCreator,
                 onViewComponentsClick = onNavigateToComponents,
             )
 
@@ -92,13 +93,15 @@ fun ShowcaseScreen(
 
             Spacer(Modifier.height(AETheme.spacing.xxl))
 
+            val typography = com.ae.designsystem.foundation.typography.AETypography.default(com.ae.designsystem.sample.utils.ThemeUtils.getFontFamily())
             AETheme(
                 palette = state.palette,
                 accent = state.accent,
                 preset = state.stylePreset,
                 darkTheme = isDark,
+                typography = typography,
             ) {
-                ExamplesGrid()
+                ExamplesGrid(sizeClass)
             }
 
             Spacer(Modifier.height(AETheme.spacing.xxxl))

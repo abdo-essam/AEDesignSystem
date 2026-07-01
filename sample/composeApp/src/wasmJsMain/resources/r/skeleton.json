@@ -1,0 +1,22 @@
+{
+  "name": "skeleton",
+  "type": "registry:component",
+  "title": "Skeleton",
+  "description": "Shimmering loading block presets.",
+  "category": "Feedback",
+  "version": "0.1.0",
+  "registryDependencies": [
+
+  ],
+  "gradleDependencies": [
+    "com.ae.designsystem:foundation:0.1.0"
+  ],
+  "files": [
+    {
+      "name": "AESkeleton.kt",
+      "path": "ui/skeleton/AESkeleton.kt",
+      "type": "registry:component",
+      "content": "package com.ae.designsystem.components.ui.skeleton\n\nimport androidx.compose.animation.core.*\nimport androidx.compose.foundation.background\nimport androidx.compose.foundation.layout.*\nimport androidx.compose.foundation.shape.RoundedCornerShape\nimport androidx.compose.runtime.*\nimport androidx.compose.ui.Modifier\nimport androidx.compose.ui.draw.clip\nimport androidx.compose.ui.geometry.Offset\nimport androidx.compose.ui.graphics.Brush\nimport androidx.compose.ui.graphics.Color\nimport androidx.compose.ui.unit.Dp\nimport androidx.compose.ui.unit.dp\nimport com.ae.designsystem.foundation.theme.AETheme\n\n/**\n * Skeleton loading placeholder — shimmer animation on a rounded block.\n *\n * Use in place of real content while data is loading:\n * ```\n * AESkeleton(modifier = Modifier.fillMaxWidth().height(16.dp))\n * AESkeleton(modifier = Modifier.size(48.dp), shape = CircleShape)\n * ```\n *\n * @param modifier Size/layout of the skeleton block.\n * @param shape Corner shape. Defaults to [AETheme.radius.md] rounded.\n */\n@Composable\npublic fun AESkeleton(\n    modifier: Modifier = Modifier,\n    shape: androidx.compose.ui.graphics.Shape = RoundedCornerShape(AETheme.radius.md),\n) {\n    val colors = AETheme.colors\n\n    val baseColor = if (colors.isLight) Color(0xFFE4E4E7) else Color(0xFF27272A)\n    val shimmerColor = if (colors.isLight) Color(0xFFF4F4F5) else Color(0xFF3F3F46)\n\n    val transition = rememberInfiniteTransition(label = \"skeleton\")\n    val shimmerOffset by transition.animateFloat(\n        initialValue = -1f,\n        targetValue = 2f,\n        animationSpec = infiniteRepeatable(\n            animation = tween(durationMillis = 1200, easing = LinearEasing),\n            repeatMode = RepeatMode.Restart,\n        ),\n        label = \"shimmerOffset\",\n    )\n\n    BoxWithConstraints(\n        modifier = modifier\n            .clip(shape)\n            .background(baseColor),\n    ) {\n        val width = constraints.maxWidth.toFloat()\n        val height = constraints.maxHeight.toFloat()\n\n        val shimmerX = width * shimmerOffset\n\n        Box(\n            modifier = Modifier\n                .fillMaxSize()\n                .background(\n                    brush = Brush.linearGradient(\n                        colors = listOf(\n                            Color.Transparent,\n                            shimmerColor.copy(alpha = 0.6f),\n                            Color.Transparent,\n                        ),\n                        start = Offset(shimmerX - width * 0.3f, 0f),\n                        end = Offset(shimmerX + width * 0.3f, height),\n                    ),\n                ),\n        )\n    }\n}\n\n/**\n * Pre-built skeleton row with avatar + text lines — common loading pattern.\n *\n * ```\n * AESkeletonListItem()\n * ```\n */\n@Composable\npublic fun AESkeletonListItem(\n    modifier: Modifier = Modifier,\n) {\n    val spacing = AETheme.spacing\n\n    Row(\n        modifier = modifier.fillMaxWidth(),\n        horizontalArrangement = Arrangement.spacedBy(spacing.md),\n    ) {\n        // Avatar placeholder\n        AESkeleton(\n            modifier = Modifier.size(40.dp),\n            shape = androidx.compose.foundation.shape.CircleShape,\n        )\n        Column(\n            modifier = Modifier.weight(1f),\n            verticalArrangement = Arrangement.spacedBy(spacing.sm),\n        ) {\n            // Title line\n            AESkeleton(modifier = Modifier.fillMaxWidth(0.6f).height(14.dp))\n            // Subtitle line\n            AESkeleton(modifier = Modifier.fillMaxWidth(0.9f).height(12.dp))\n        }\n    }\n}\n"
+    }
+  ]
+}

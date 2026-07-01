@@ -11,7 +11,7 @@ import com.ae.designsystem.components.ui.snackbar.rememberSnackbarState
 import com.ae.designsystem.foundation.theme.AETheme
 import com.ae.designsystem.sample.docs.AboutScreen
 import com.ae.designsystem.sample.docs.GettingStartedScreen
-import com.ae.designsystem.sample.docs.components.ComponentsScreen
+import com.ae.designsystem.sample.docs.components.DocsScreen
 import com.ae.designsystem.sample.docs.foundation.FoundationScreen
 import com.ae.designsystem.sample.playground.PlaygroundScreen
 import com.ae.designsystem.sample.theme.ThemeScreen
@@ -35,11 +35,13 @@ public fun CatalogApp() {
     var destination by remember { mutableStateOf(CatalogDestination.GettingStarted) }
     val snackbarState = rememberSnackbarState()
 
+    val typography = com.ae.designsystem.foundation.typography.AETypography.default(com.ae.designsystem.sample.utils.ThemeUtils.getFontFamily())
     AETheme(
         palette   = theme.palette,
         accent    = theme.accent,
         preset    = theme.preset,
         darkTheme = theme.darkMode,
+        typography = typography,
     ) {
         Box(
             modifier = Modifier
@@ -82,7 +84,7 @@ private fun CatalogScaffold(
             when (destination) {
                 CatalogDestination.GettingStarted -> GettingStartedScreen()
                 CatalogDestination.Foundation     -> FoundationScreen()
-                CatalogDestination.Components     -> ComponentsScreen()
+                CatalogDestination.Components     -> DocsScreen()
                 CatalogDestination.Playground     -> PlaygroundScreen()
                 CatalogDestination.Theme          -> ThemeScreen(
                     config        = theme,

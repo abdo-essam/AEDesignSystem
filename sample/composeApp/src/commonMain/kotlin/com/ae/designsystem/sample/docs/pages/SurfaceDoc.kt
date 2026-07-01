@@ -8,6 +8,7 @@ import com.ae.designsystem.components.ui.surface.AESurface
 import com.ae.designsystem.components.ui.text.AEText
 import com.ae.designsystem.sample.docs.components.*
 import com.ae.designsystem.foundation.theme.AETheme
+import androidx.compose.foundation.shape.RoundedCornerShape
 
 @Composable
 fun SurfaceDoc() {
@@ -56,7 +57,7 @@ private fun SurfaceUsageTab() {
             """
 AESurface(
     modifier = Modifier.padding(16.dp),
-    color = AETheme.colors.surface
+    color = AETheme.colors.card
 ) {
     AEText("Inside Surface")
 }
@@ -72,7 +73,7 @@ private fun SurfaceApiTab() {
             listOf(
                 PropInfo("modifier", "Modifier", "Modifier", "Surface layout constraints."),
                 PropInfo("shape", "Shape", "RoundedCornerShape(radius.md)", "Corner clip border shape."),
-                PropInfo("color", "Color", "AETheme.colors.surface", "Background fill color."),
+                PropInfo("color", "Color", "AETheme.colors.card", "Background fill color."),
                 PropInfo("elevation", "Dp", "0.dp", "Drop shadow depth.")
             )
         )

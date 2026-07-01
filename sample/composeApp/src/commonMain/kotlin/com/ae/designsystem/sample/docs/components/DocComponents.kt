@@ -27,6 +27,7 @@ import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.stringResource
 import aedesignsystem.sample.composeapp.generated.resources.Res
 import aedesignsystem.sample.composeapp.generated.resources.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 
 import com.ae.designsystem.components.ui.button.AEButton
 import com.ae.designsystem.components.ui.button.AEButtonSize
@@ -760,6 +761,40 @@ fun ComponentFamily(
                         )
                     }
                 }
+            }
+        }
+    }
+}
+
+// ─── Bullet List Helper ──────────────────────────────────────────────────────
+
+/**
+ * Simple unordered bullet list for use in doc pages.
+ */
+@Composable
+fun BulletList(
+    items: List<String>,
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(AETheme.spacing.xs),
+    ) {
+        items.forEach { item ->
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(AETheme.spacing.xs),
+                verticalAlignment = Alignment.Top,
+            ) {
+                AEText(
+                    text = "•",
+                    style = AETheme.typography.bodyMedium,
+                    color = AETheme.colors.textMuted,
+                )
+                AEText(
+                    text = item,
+                    style = AETheme.typography.bodyMedium,
+                    color = AETheme.colors.textSecondary,
+                )
             }
         }
     }

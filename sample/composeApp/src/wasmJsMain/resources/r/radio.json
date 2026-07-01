@@ -1,0 +1,22 @@
+{
+  "name": "radio",
+  "type": "registry:component",
+  "title": "RadioButton",
+  "description": "Mutually exclusive selection button control.",
+  "category": "Forms",
+  "version": "0.1.0",
+  "registryDependencies": [
+    "text"
+  ],
+  "gradleDependencies": [
+    "com.ae.designsystem:foundation:0.1.0"
+  ],
+  "files": [
+    {
+      "name": "AERadioButton.kt",
+      "path": "ui/radio/AERadioButton.kt",
+      "type": "registry:component",
+      "content": "package com.ae.designsystem.components.ui.radio\n\nimport androidx.compose.animation.animateColorAsState\nimport androidx.compose.animation.core.tween\nimport androidx.compose.foundation.background\nimport androidx.compose.foundation.border\nimport androidx.compose.foundation.clickable\nimport androidx.compose.foundation.interaction.MutableInteractionSource\nimport androidx.compose.foundation.layout.*\nimport androidx.compose.foundation.shape.CircleShape\nimport androidx.compose.runtime.*\nimport androidx.compose.ui.Alignment\nimport androidx.compose.ui.Modifier\nimport androidx.compose.ui.draw.clip\nimport androidx.compose.ui.semantics.Role\nimport androidx.compose.ui.semantics.role\nimport androidx.compose.ui.semantics.semantics\nimport androidx.compose.ui.semantics.stateDescription\nimport androidx.compose.ui.unit.dp\nimport com.ae.designsystem.foundation.theme.AETheme\nimport com.ae.designsystem.components.ui.text.AEText\n\n/**\n * Radio button — for use inside a mutually exclusive group.\n *\n * ```\n * AERadioButton(\n *     selected = selectedOption == option,\n *     onClick = { selectedOption = option },\n *     label = option,\n * )\n * ```\n */\n@Composable\npublic fun AERadioButton(\n    selected: Boolean,\n    onClick: () -> Unit,\n    modifier: Modifier = Modifier,\n    label: String? = null,\n    enabled: Boolean = true,\n    interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },\n) {\n    val colors = AETheme.colors\n    val spacing = AETheme.spacing\n    val motion = AETheme.motion\n\n    val ringColor by animateColorAsState(\n        targetValue = when {\n            !enabled -> colors.textMuted.copy(alpha = 0.4f)\n            selected -> colors.accent\n            else -> colors.border\n        },\n        animationSpec = tween(motion.durationFast),\n        label = \"radioRing\",\n    )\n\n    val dotColor by animateColorAsState(\n        targetValue = when {\n            !enabled && selected -> colors.textMuted\n            selected -> colors.accent\n            else -> colors.background\n        },\n        animationSpec = tween(motion.durationFast),\n        label = \"radioDot\",\n    )\n\n    Row(\n        modifier = modifier\n            .clickable(\n                enabled = enabled,\n                interactionSource = interactionSource,\n                indication = null,\n                role = Role.RadioButton,\n                onClick = onClick,\n            )\n            .semantics {\n                role = Role.RadioButton\n                stateDescription = if (selected) \"Selected\" else \"Not selected\"\n            },\n        verticalAlignment = Alignment.CenterVertically,\n        horizontalArrangement = Arrangement.spacedBy(spacing.sm),\n    ) {\n        // Outer ring\n        Box(\n            modifier = Modifier\n                .size(20.dp)\n                .clip(CircleShape)\n                .border(2.dp, ringColor, CircleShape),\n            contentAlignment = Alignment.Center,\n        ) {\n            // Inner dot\n            Box(\n                modifier = Modifier\n                    .size(10.dp)\n                    .clip(CircleShape)\n                    .background(dotColor),\n            )\n        }\n\n        if (label != null) {\n            AEText(\n                text = label,\n                style = AETheme.typography.bodyMedium,\n                color = if (enabled) colors.textPrimary else colors.textMuted,\n            )\n        }\n    }\n}"
+    }
+  ]
+}

@@ -19,6 +19,7 @@ import aedesignsystem.sample.composeapp.generated.resources.source_tab_docs
 import com.ae.designsystem.sample.docs.catalog.ComponentRegistry
 import com.ae.designsystem.sample.docs.sources.SourceCodeViewer
 import com.ae.designsystem.foundation.theme.AETheme
+import androidx.compose.foundation.shape.RoundedCornerShape
 
 @Composable
 fun PageContent(
@@ -26,6 +27,12 @@ fun PageContent(
     registry: ComponentRegistry,
 ) {
     Column(modifier = Modifier.widthIn(max = 900.dp)) {
+        val guide = com.ae.designsystem.sample.docs.catalog.guidePages.find { it.id == selectedId }
+        if (guide != null) {
+            guide.content()
+            return@Column
+        }
+
         val entry = registry.findById(selectedId)
         if (entry != null) {
             var showCode by remember(selectedId) { mutableStateOf(false) }

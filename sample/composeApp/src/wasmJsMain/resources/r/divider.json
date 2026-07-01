@@ -1,0 +1,22 @@
+{
+  "name": "divider",
+  "type": "registry:component",
+  "title": "Divider",
+  "description": "A horizontal or vertical divider line.",
+  "category": "Layout",
+  "version": "0.1.0",
+  "registryDependencies": [
+
+  ],
+  "gradleDependencies": [
+    "com.ae.designsystem:foundation:0.1.0"
+  ],
+  "files": [
+    {
+      "name": "AEDivider.kt",
+      "path": "ui/divider/AEDivider.kt",
+      "type": "registry:component",
+      "content": "package com.ae.designsystem.components.ui.divider\n\nimport androidx.compose.foundation.background\nimport androidx.compose.foundation.layout.Box\nimport androidx.compose.foundation.layout.fillMaxWidth\nimport androidx.compose.foundation.layout.height\nimport androidx.compose.foundation.layout.width\nimport androidx.compose.runtime.Composable\nimport androidx.compose.ui.Modifier\nimport androidx.compose.ui.graphics.Color\nimport androidx.compose.ui.unit.Dp\nimport androidx.compose.ui.unit.dp\nimport com.ae.designsystem.foundation.theme.AETheme\n\n/**\n * Horizontal divider line using theme border color.\n *\n * @param modifier Modifier for the divider.\n * @param color Divider color. Defaults to [AETheme.colors.border].\n * @param thickness Line thickness.\n */\n@Composable\npublic fun AEDivider(\n    modifier: Modifier = Modifier,\n    color: Color = AETheme.colors.border,\n    thickness: Dp = 1.dp,\n) {\n    Box(\n        modifier = modifier\n            .fillMaxWidth()\n            .height(thickness)\n            .background(color),\n    )\n}\n\n/**\n * Vertical divider line using theme border color.\n *\n * @param modifier Modifier for the divider.\n * @param color Divider color. Defaults to [AETheme.colors.border].\n * @param thickness Line thickness.\n */\n@Composable\npublic fun AEVerticalDivider(\n    modifier: Modifier = Modifier,\n    color: Color = AETheme.colors.border,\n    thickness: Dp = 1.dp,\n) {\n    Box(\n        modifier = modifier\n            .width(thickness)\n            .background(color),\n    )\n}\n"
+    }
+  ]
+}

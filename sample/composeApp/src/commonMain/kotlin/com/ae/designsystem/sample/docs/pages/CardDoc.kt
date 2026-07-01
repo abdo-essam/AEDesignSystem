@@ -7,6 +7,7 @@ import com.ae.designsystem.components.ui.card.AECard
 import com.ae.designsystem.components.ui.text.AEText
 import com.ae.designsystem.sample.docs.components.*
 import com.ae.designsystem.foundation.theme.AETheme
+import androidx.compose.foundation.shape.RoundedCornerShape
 
 @Composable
 fun CardDoc() {
@@ -58,7 +59,7 @@ private fun CardApiTab() {
     DocSection("API Reference") {
         PropsTable(
             listOf(
-                PropInfo("color", "Color", "AETheme.colors.surface", "Background fill color of card."),
+                PropInfo("color", "Color", "AETheme.colors.card", "Background fill color of card."),
                 PropInfo("shape", "Shape", "RoundedCornerShape(radius.lg)", "Corner rounding path."),
                 PropInfo("elevation", "Dp", "0.dp", "Drop shadow depth."),
                 PropInfo("header", "@Composable () -> Unit?", "null", "Top header layout slot."),

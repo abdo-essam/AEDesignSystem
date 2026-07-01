@@ -1,0 +1,22 @@
+{
+  "name": "switch",
+  "type": "registry:component",
+  "title": "Switch",
+  "description": "Visual toggle switch control.",
+  "category": "Forms",
+  "version": "0.1.0",
+  "registryDependencies": [
+    "text"
+  ],
+  "gradleDependencies": [
+    "com.ae.designsystem:foundation:0.1.0"
+  ],
+  "files": [
+    {
+      "name": "AESwitch.kt",
+      "path": "ui/switch/AESwitch.kt",
+      "type": "registry:component",
+      "content": "package com.ae.designsystem.components.ui.switch\n\nimport androidx.compose.animation.animateColorAsState\nimport androidx.compose.animation.core.animateDpAsState\nimport androidx.compose.animation.core.tween\nimport androidx.compose.foundation.background\nimport androidx.compose.foundation.border\nimport androidx.compose.foundation.clickable\nimport androidx.compose.foundation.interaction.MutableInteractionSource\nimport androidx.compose.foundation.layout.*\nimport androidx.compose.foundation.shape.CircleShape\nimport androidx.compose.foundation.shape.RoundedCornerShape\nimport androidx.compose.runtime.*\nimport androidx.compose.ui.Alignment\nimport androidx.compose.ui.Modifier\nimport androidx.compose.ui.draw.clip\nimport androidx.compose.ui.semantics.Role\nimport androidx.compose.ui.semantics.role\nimport androidx.compose.ui.semantics.semantics\nimport androidx.compose.ui.semantics.stateDescription\nimport androidx.compose.ui.unit.dp\nimport com.ae.designsystem.foundation.theme.AETheme\nimport com.ae.designsystem.components.ui.text.AEText\n\nprivate val SwitchWidth = 44.dp\nprivate val SwitchHeight = 24.dp\nprivate val ThumbSize = 18.dp\nprivate val ThumbPadding = 3.dp\n\n/**\n * Toggle switch — animated thumb slide, token-driven.\n *\n * ```\n * var enabled by remember { mutableStateOf(false) }\n * AESwitch(checked = enabled, onCheckedChange = { enabled = it })\n * ```\n */\n@Composable\npublic fun AESwitch(\n    checked: Boolean,\n    onCheckedChange: (Boolean) -> Unit,\n    modifier: Modifier = Modifier,\n    label: String? = null,\n    enabled: Boolean = true,\n    interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },\n) {\n    val colors = AETheme.colors\n    val spacing = AETheme.spacing\n    val motion = AETheme.motion\n\n    val trackColor by animateColorAsState(\n        targetValue = when {\n            !enabled -> colors.textMuted.copy(alpha = 0.3f)\n            checked -> colors.accent\n            else -> colors.border\n        },\n        animationSpec = tween(motion.durationMedium),\n        label = \"switchTrack\",\n    )\n\n    val thumbOffset by animateDpAsState(\n        targetValue = if (checked) SwitchWidth - ThumbSize - ThumbPadding else ThumbPadding,\n        animationSpec = tween(motion.durationMedium),\n        label = \"switchThumb\",\n    )\n\n    Row(\n        modifier = modifier\n            .clickable(\n                enabled = enabled,\n                interactionSource = interactionSource,\n                indication = null,\n                role = Role.Switch,\n                onClick = { onCheckedChange(!checked) },\n            )\n            .semantics {\n                role = Role.Switch\n                stateDescription = if (checked) \"On\" else \"Off\"\n            },\n        verticalAlignment = Alignment.CenterVertically,\n        horizontalArrangement = Arrangement.spacedBy(spacing.md),\n    ) {\n        // Track\n        Box(\n            modifier = Modifier\n                .width(SwitchWidth)\n                .height(SwitchHeight)\n                .clip(RoundedCornerShape(SwitchHeight / 2))\n                .background(trackColor),\n        ) {\n            // Thumb\n            Box(\n                modifier = Modifier\n                    .padding(top = ThumbPadding, bottom = ThumbPadding)\n                    .offset(x = thumbOffset)\n                    .size(ThumbSize)\n                    .clip(CircleShape)\n                    .background(colors.textOnAccent),\n            )\n        }\n\n        if (label != null) {\n            AEText(\n                text = label,\n                style = AETheme.typography.bodyMedium,\n                color = if (enabled) colors.textPrimary else colors.textMuted,\n            )\n        }\n    }\n}"
+    }
+  ]
+}

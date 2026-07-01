@@ -1,0 +1,22 @@
+{
+  "name": "badge",
+  "type": "registry:component",
+  "title": "Badge",
+  "description": "Small labeled indicator for counts, status, and tags.",
+  "category": "DataDisplay",
+  "version": "0.1.0",
+  "registryDependencies": [
+    "text"
+  ],
+  "gradleDependencies": [
+    "com.ae.designsystem:foundation:0.1.0"
+  ],
+  "files": [
+    {
+      "name": "AEBadge.kt",
+      "path": "ui/badge/AEBadge.kt",
+      "type": "registry:component",
+      "content": "package com.ae.designsystem.components.ui.badge\n\nimport androidx.compose.foundation.background\nimport androidx.compose.foundation.layout.*\nimport androidx.compose.foundation.shape.RoundedCornerShape\nimport androidx.compose.runtime.Composable\nimport androidx.compose.ui.Alignment\nimport androidx.compose.ui.Modifier\nimport androidx.compose.ui.draw.clip\nimport androidx.compose.ui.graphics.Color\nimport androidx.compose.ui.unit.dp\nimport com.ae.designsystem.foundation.theme.AETheme\nimport com.ae.designsystem.components.ui.text.AEText\n\n/** Visual style of a [AEBadge]. */\npublic enum class AEBadgeVariant { Default, Destructive, Success, Warning, Info, Outline }\n\n/**\n * Badge — small labeled indicator for counts, status, and tags.\n *\n * ```\n * AEBadge(label = \"New\")\n * AEBadge(label = \"Error\", variant = AEBadgeVariant.Destructive)\n * ```\n */\n@Composable\npublic fun AEBadge(\n    label: String,\n    modifier: Modifier = Modifier,\n    variant: AEBadgeVariant = AEBadgeVariant.Default,\n) {\n    val colors = AETheme.colors\n    val radius = AETheme.radius\n    val spacing = AETheme.spacing\n\n    val (bg, textColor) = when (variant) {\n        AEBadgeVariant.Default -> colors.accent to colors.textOnAccent\n        AEBadgeVariant.Destructive -> colors.destructive to colors.destructiveText\n        AEBadgeVariant.Success -> colors.success to Color.White\n        AEBadgeVariant.Warning -> colors.warning to Color(0xFF1C1917)\n        AEBadgeVariant.Info -> colors.info to Color.White\n        AEBadgeVariant.Outline -> Color.Transparent to colors.textPrimary\n    }\n\n    Box(\n        modifier = modifier\n            .clip(RoundedCornerShape(radius.full))\n            .background(bg)\n            .then(\n                if (variant == AEBadgeVariant.Outline) {\n                    Modifier.padding(horizontal = (spacing.sm.value - 1).dp, vertical = (spacing.xxs.value - 1).dp)\n                } else {\n                    Modifier.padding(horizontal = spacing.sm, vertical = spacing.xxs)\n                }\n            ),\n        contentAlignment = Alignment.Center,\n    ) {\n        AEText(\n            text = label,\n            style = AETheme.typography.labelSmall,\n            color = textColor,\n        )\n    }\n}"
+    }
+  ]
+}

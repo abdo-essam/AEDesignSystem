@@ -1,0 +1,23 @@
+{
+  "name": "tabs",
+  "type": "registry:component",
+  "title": "Tabs",
+  "description": "Horizontal navigation tabs.",
+  "category": "Navigation",
+  "version": "0.1.0",
+  "registryDependencies": [
+    "divider",
+    "text"
+  ],
+  "gradleDependencies": [
+    "com.ae.designsystem:foundation:0.1.0"
+  ],
+  "files": [
+    {
+      "name": "AETabs.kt",
+      "path": "ui/tabs/AETabs.kt",
+      "type": "registry:component",
+      "content": "package com.ae.designsystem.components.ui.tabs\n\nimport androidx.compose.animation.animateColorAsState\nimport androidx.compose.animation.core.animateDpAsState\nimport androidx.compose.animation.core.tween\nimport androidx.compose.foundation.background\nimport androidx.compose.foundation.clickable\nimport androidx.compose.foundation.layout.*\nimport androidx.compose.foundation.shape.RoundedCornerShape\nimport androidx.compose.runtime.*\nimport androidx.compose.ui.Alignment\nimport androidx.compose.ui.Modifier\nimport androidx.compose.ui.draw.clip\nimport androidx.compose.ui.draw.drawBehind\nimport androidx.compose.ui.geometry.Offset\nimport androidx.compose.ui.graphics.Color\nimport androidx.compose.ui.semantics.Role\nimport androidx.compose.ui.semantics.role\nimport androidx.compose.ui.semantics.selected\nimport androidx.compose.ui.semantics.semantics\nimport androidx.compose.ui.unit.dp\nimport com.ae.designsystem.foundation.theme.AETheme\nimport com.ae.designsystem.components.ui.divider.AEDivider\nimport com.ae.designsystem.components.ui.text.AEText\n\n/**\n * Tabs — horizontal navigation with animated indicator.\n *\n * ```\n * var selectedTab by remember { mutableIntStateOf(0) }\n * AETabs(\n *     tabs = listOf(\"Overview\", \"Tokens\", \"Components\"),\n *     selectedIndex = selectedTab,\n *     onTabSelected = { selectedTab = it },\n * )\n * ```\n *\n * @param tabs List of tab labels.\n * @param selectedIndex Currently selected tab index.\n * @param onTabSelected Callback with new index.\n */\n@Composable\npublic fun AETabs(\n    tabs: List<String>,\n    selectedIndex: Int,\n    onTabSelected: (Int) -> Unit,\n    modifier: Modifier = Modifier,\n) {\n    val colors = AETheme.colors\n    val spacing = AETheme.spacing\n    val motion = AETheme.motion\n\n    Column(modifier = modifier.fillMaxWidth()) {\n        Row(\n            modifier = Modifier\n                .fillMaxWidth()\n                .background(colors.background),\n        ) {\n            tabs.forEachIndexed { index, label ->\n                val isSelected = index == selectedIndex\n                val textColor by animateColorAsState(\n                    targetValue = if (isSelected) colors.accent else colors.textMuted,\n                    animationSpec = tween(motion.durationFast),\n                    label = \"tabTextColor\",\n                )\n                val indicatorColor by animateColorAsState(\n                    targetValue = if (isSelected) colors.accent else Color.Transparent,\n                    animationSpec = tween(motion.durationMedium),\n                    label = \"tabIndicator\",\n                )\n\n                Box(\n                    modifier = Modifier\n                        .weight(1f)\n                        .clickable(\n                            indication = null,\n                            interactionSource = remember { androidx.compose.foundation.interaction.MutableInteractionSource() },\n                            role = Role.Tab,\n                            onClick = { onTabSelected(index) },\n                        )\n                        .semantics {\n                            role = Role.Tab\n                            selected = isSelected\n                        }\n                        .drawBehind {\n                            // Bottom indicator line\n                            drawRect(\n                                color = indicatorColor,\n                                topLeft = Offset(0f, size.height - 2.dp.toPx()),\n                                size = androidx.compose.ui.geometry.Size(size.width, 2.dp.toPx()),\n                            )\n                        }\n                        .padding(vertical = spacing.md, horizontal = spacing.sm),\n                    contentAlignment = Alignment.Center,\n                ) {\n                    AEText(\n                        text = label,\n                        style = if (isSelected) AETheme.typography.labelLarge else AETheme.typography.labelMedium,\n                        color = textColor,\n                    )\n                }\n            }\n        }\n\n        // Full-width bottom border\n        AEDivider()\n    }\n}"
+    }
+  ]
+}

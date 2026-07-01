@@ -1,0 +1,352 @@
+{
+  "name": "aedesignsystem",
+  "homepage": "https://aedesignsystem.com",
+  "version": "0.1.0",
+  "items": [
+  {
+    "name": "card",
+    "type": "registry:component",
+    "title": "Card",
+    "description": "A container with border, shadow, and structured sections.",
+    "category": "Layout",
+    "registryDependencies": ["button", "surface"],
+    "files": [
+      {
+        "name": "AECard.kt",
+        "path": "ui/card/AECard.kt",
+        "type": "registry:component"
+      }
+    ]
+  },
+  {
+    "name": "divider",
+    "type": "registry:component",
+    "title": "Divider",
+    "description": "A horizontal or vertical divider line.",
+    "category": "Layout",
+    "registryDependencies": [],
+    "files": [
+      {
+        "name": "AEDivider.kt",
+        "path": "ui/divider/AEDivider.kt",
+        "type": "registry:component"
+      }
+    ]
+  },
+  {
+    "name": "surface",
+    "type": "registry:component",
+    "title": "Surface",
+    "description": "Core stylized layout surface blocks.",
+    "category": "Layout",
+    "registryDependencies": [],
+    "files": [
+      {
+        "name": "AESurface.kt",
+        "path": "ui/surface/AESurface.kt",
+        "type": "registry:component"
+      }
+    ]
+  },
+  {
+    "name": "button",
+    "type": "registry:component",
+    "title": "Button",
+    "description": "Core button component — variant, size, and enabled states.",
+    "category": "Forms",
+    "registryDependencies": [],
+    "files": [
+      {
+        "name": "AEButton.kt",
+        "path": "ui/button/AEButton.kt",
+        "type": "registry:component"
+      }
+    ]
+  },
+  {
+    "name": "checkbox",
+    "type": "registry:component",
+    "title": "Checkbox",
+    "description": "Standard binary toggle control.",
+    "category": "Forms",
+    "registryDependencies": ["text"],
+    "files": [
+      {
+        "name": "AECheckbox.kt",
+        "path": "ui/checkbox/AECheckbox.kt",
+        "type": "registry:component"
+      }
+    ]
+  },
+  {
+    "name": "radio",
+    "type": "registry:component",
+    "title": "RadioButton",
+    "description": "Mutually exclusive selection button control.",
+    "category": "Forms",
+    "registryDependencies": ["text"],
+    "files": [
+      {
+        "name": "AERadioButton.kt",
+        "path": "ui/radio/AERadioButton.kt",
+        "type": "registry:component"
+      }
+    ]
+  },
+  {
+    "name": "switch",
+    "type": "registry:component",
+    "title": "Switch",
+    "description": "Visual toggle switch control.",
+    "category": "Forms",
+    "registryDependencies": ["text"],
+    "files": [
+      {
+        "name": "AESwitch.kt",
+        "path": "ui/switch/AESwitch.kt",
+        "type": "registry:component"
+      }
+    ]
+  },
+  {
+    "name": "slider",
+    "type": "registry:component",
+    "title": "Slider",
+    "description": "Numerical range selection slider.",
+    "category": "Forms",
+    "registryDependencies": [],
+    "files": [
+      {
+        "name": "AESlider.kt",
+        "path": "ui/slider/AESlider.kt",
+        "type": "registry:component"
+      }
+    ]
+  },
+  {
+    "name": "textfield",
+    "type": "registry:component",
+    "title": "TextField",
+    "description": "Standard text inputs with custom border and state highlights.",
+    "category": "Forms",
+    "registryDependencies": ["text"],
+    "files": [
+      {
+        "name": "AETextField.kt",
+        "path": "ui/textfield/AETextField.kt",
+        "type": "registry:component"
+      }
+    ]
+  },
+  {
+    "name": "badge",
+    "type": "registry:component",
+    "title": "Badge",
+    "description": "Small labeled indicator for counts, status, and tags.",
+    "category": "DataDisplay",
+    "registryDependencies": ["text"],
+    "files": [
+      {
+        "name": "AEBadge.kt",
+        "path": "ui/badge/AEBadge.kt",
+        "type": "registry:component"
+      }
+    ]
+  },
+  {
+    "name": "avatar",
+    "type": "registry:component",
+    "title": "Avatar",
+    "description": "Circular user identity fallback circle.",
+    "category": "DataDisplay",
+    "registryDependencies": ["text"],
+    "files": [
+      {
+        "name": "AEAvatar.kt",
+        "path": "ui/avatar/AEAvatar.kt",
+        "type": "registry:component"
+      }
+    ]
+  },
+  {
+    "name": "text",
+    "type": "registry:component",
+    "title": "Text",
+    "description": "Typography component applying project styling presets.",
+    "category": "DataDisplay",
+    "registryDependencies": [],
+    "files": [
+      {
+        "name": "AEText.kt",
+        "path": "ui/text/AEText.kt",
+        "type": "registry:component"
+      }
+    ]
+  },
+  {
+    "name": "chip",
+    "type": "registry:component",
+    "title": "Chip",
+    "description": "Compact interactive filter tags.",
+    "category": "DataDisplay",
+    "registryDependencies": ["text"],
+    "files": [
+      {
+        "name": "AEChip.kt",
+        "path": "ui/chip/AEChip.kt",
+        "type": "registry:component"
+      }
+    ]
+  },
+  {
+    "name": "progress",
+    "type": "registry:component",
+    "title": "Progress",
+    "description": "Linear and circular determinate and indeterminate progress bars.",
+    "category": "Feedback",
+    "registryDependencies": [],
+    "files": [
+      {
+        "name": "AEProgress.kt",
+        "path": "ui/progress/AEProgress.kt",
+        "type": "registry:component"
+      }
+    ]
+  },
+  {
+    "name": "skeleton",
+    "type": "registry:component",
+    "title": "Skeleton",
+    "description": "Shimmering loading block presets.",
+    "category": "Feedback",
+    "registryDependencies": [],
+    "files": [
+      {
+        "name": "AESkeleton.kt",
+        "path": "ui/skeleton/AESkeleton.kt",
+        "type": "registry:component"
+      }
+    ]
+  },
+  {
+    "name": "snackbar",
+    "type": "registry:component",
+    "title": "Snackbar",
+    "description": "Popup alert feedback banners.",
+    "category": "Feedback",
+    "registryDependencies": ["button", "text"],
+    "files": [
+      {
+        "name": "AESnackbar.kt",
+        "path": "ui/snackbar/AESnackbar.kt",
+        "type": "registry:component"
+      }
+    ]
+  },
+  {
+    "name": "dialog",
+    "type": "registry:component",
+    "title": "Dialog",
+    "description": "Modal overlay dialogue boxes.",
+    "category": "Overlays",
+    "registryDependencies": ["button", "divider", "text"],
+    "files": [
+      {
+        "name": "AEDialog.kt",
+        "path": "ui/dialog/AEDialog.kt",
+        "type": "registry:component"
+      }
+    ]
+  },
+  {
+    "name": "bottomsheet",
+    "type": "registry:component",
+    "title": "BottomSheet",
+    "description": "Slide-up bottom overlay sheet layouts.",
+    "category": "Overlays",
+    "registryDependencies": ["button", "divider", "text"],
+    "files": [
+      {
+        "name": "AEBottomSheet.kt",
+        "path": "ui/bottomsheet/AEBottomSheet.kt",
+        "type": "registry:component"
+      }
+    ]
+  },
+  {
+    "name": "tooltip",
+    "type": "registry:component",
+    "title": "Tooltip",
+    "description": "Hover informational tooltips.",
+    "category": "Overlays",
+    "registryDependencies": ["button", "text"],
+    "files": [
+      {
+        "name": "AETooltip.kt",
+        "path": "ui/tooltip/AETooltip.kt",
+        "type": "registry:component"
+      }
+    ]
+  },
+  {
+    "name": "dropdown",
+    "type": "registry:component",
+    "title": "DropdownMenu",
+    "description": "Popups showing selectable menu actions.",
+    "category": "Overlays",
+    "registryDependencies": ["button", "text"],
+    "files": [
+      {
+        "name": "AEDropdownMenu.kt",
+        "path": "ui/dropdown/AEDropdownMenu.kt",
+        "type": "registry:component"
+      }
+    ]
+  },
+  {
+    "name": "tabs",
+    "type": "registry:component",
+    "title": "Tabs",
+    "description": "Horizontal navigation tabs.",
+    "category": "Navigation",
+    "registryDependencies": ["divider", "text"],
+    "files": [
+      {
+        "name": "AETabs.kt",
+        "path": "ui/tabs/AETabs.kt",
+        "type": "registry:component"
+      }
+    ]
+  },
+  {
+    "name": "navigationbar",
+    "type": "registry:component",
+    "title": "NavigationBar",
+    "description": "Bottom destination navigation bar layouts.",
+    "category": "Navigation",
+    "registryDependencies": ["divider", "text"],
+    "files": [
+      {
+        "name": "AENavigationBar.kt",
+        "path": "ui/navigationbar/AENavigationBar.kt",
+        "type": "registry:component"
+      }
+    ]
+  },
+  {
+    "name": "topappbar",
+    "type": "registry:component",
+    "title": "TopAppBar",
+    "description": "Header bar navigation layouts.",
+    "category": "Navigation",
+    "registryDependencies": ["button", "divider", "text"],
+    "files": [
+      {
+        "name": "AETopAppBar.kt",
+        "path": "ui/topappbar/AETopAppBar.kt",
+        "type": "registry:component"
+      }
+    ]
+  }
+  ]
+}

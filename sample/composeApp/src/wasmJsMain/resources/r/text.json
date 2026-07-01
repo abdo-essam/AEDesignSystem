@@ -1,0 +1,22 @@
+{
+  "name": "text",
+  "type": "registry:component",
+  "title": "Text",
+  "description": "Typography component applying project styling presets.",
+  "category": "DataDisplay",
+  "version": "0.1.0",
+  "registryDependencies": [
+
+  ],
+  "gradleDependencies": [
+    "com.ae.designsystem:foundation:0.1.0"
+  ],
+  "files": [
+    {
+      "name": "AEText.kt",
+      "path": "ui/text/AEText.kt",
+      "type": "registry:component",
+      "content": "package com.ae.designsystem.components.ui.text\n\nimport androidx.compose.foundation.text.BasicText\nimport androidx.compose.runtime.Composable\nimport androidx.compose.ui.Modifier\nimport androidx.compose.ui.graphics.Color\nimport androidx.compose.ui.text.TextStyle\nimport androidx.compose.ui.text.style.TextOverflow\nimport com.ae.designsystem.foundation.theme.AETheme\n\n/**\n * Text component applying AEDesignSystem typography tokens.\n *\n * Thin wrapper around [BasicText] — avoids Material3 `Text`.\n *\n * ```\n * AEText(\"Hello World\")\n * AEText(\"Title\", style = AETheme.typography.headingLarge)\n * AEText(\"Muted\", color = AETheme.colors.textMuted)\n * ```\n *\n * @param text The text string to render.\n * @param modifier Modifier for the text element.\n * @param style Typography style. Defaults to [AETheme.typography.bodyMedium].\n * @param color Text color override. If provided, merges with [style].\n * @param maxLines Maximum lines before truncation. [Int.MAX_VALUE] for unlimited.\n * @param overflow How to handle text overflow.\n */\n@Composable\npublic fun AEText(\n    text: String,\n    modifier: Modifier = Modifier,\n    style: TextStyle = AETheme.typography.bodyMedium,\n    color: Color = AETheme.colors.textPrimary,\n    maxLines: Int = Int.MAX_VALUE,\n    overflow: TextOverflow = TextOverflow.Clip,\n) {\n    BasicText(\n        text = text,\n        modifier = modifier,\n        style = style.copy(color = color),\n        maxLines = maxLines,\n        overflow = overflow,\n    )\n}\n"
+    }
+  ]
+}

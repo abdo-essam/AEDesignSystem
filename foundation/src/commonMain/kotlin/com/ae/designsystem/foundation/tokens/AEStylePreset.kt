@@ -5,9 +5,6 @@ import androidx.compose.ui.unit.dp
 /**
  * Style presets — named personalities that bundle spacing, radius,
  * and motion characteristics.
- *
- * Inspired by RikkaUI's preset system: one enum switch changes the
- * entire spatial feel of your app.
  */
 public enum class AEStylePreset {
     /** Balanced defaults — 8dp radius, standard spacing, smooth motion */

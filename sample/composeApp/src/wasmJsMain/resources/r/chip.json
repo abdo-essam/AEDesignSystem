@@ -1,0 +1,22 @@
+{
+  "name": "chip",
+  "type": "registry:component",
+  "title": "Chip",
+  "description": "Compact interactive filter tags.",
+  "category": "DataDisplay",
+  "version": "0.1.0",
+  "registryDependencies": [
+    "text"
+  ],
+  "gradleDependencies": [
+    "com.ae.designsystem:foundation:0.1.0"
+  ],
+  "files": [
+    {
+      "name": "AEChip.kt",
+      "path": "ui/chip/AEChip.kt",
+      "type": "registry:component",
+      "content": "package com.ae.designsystem.components.ui.chip\n\nimport androidx.compose.foundation.background\nimport androidx.compose.foundation.border\nimport androidx.compose.foundation.clickable\nimport androidx.compose.foundation.interaction.MutableInteractionSource\nimport androidx.compose.foundation.layout.*\nimport androidx.compose.foundation.shape.RoundedCornerShape\nimport androidx.compose.runtime.Composable\nimport androidx.compose.runtime.remember\nimport androidx.compose.ui.Alignment\nimport androidx.compose.ui.Modifier\nimport androidx.compose.ui.draw.clip\nimport androidx.compose.ui.graphics.Color\nimport androidx.compose.ui.semantics.Role\nimport androidx.compose.ui.unit.dp\nimport com.ae.designsystem.foundation.icons.AEIcon\nimport com.ae.designsystem.foundation.icons.AEIconToken\nimport com.ae.designsystem.foundation.theme.AETheme\nimport com.ae.designsystem.components.ui.text.AEText\n\n/**\n * Chip — compact interactive tag with optional leading/trailing icon.\n *\n * ```\n * AEChip(label = \"Kotlin\", leadingIcon = AEIcons.Star)\n * AEChip(label = \"Remove\", trailingIcon = AEIcons.Close, onClick = { ... })\n * ```\n */\n@Composable\npublic fun AEChip(\n    label: String,\n    modifier: Modifier = Modifier,\n    selected: Boolean = false,\n    onClick: (() -> Unit)? = null,\n    leadingIcon: AEIconToken? = null,\n    trailingIcon: AEIconToken? = null,\n    enabled: Boolean = true,\n    interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },\n) {\n    val colors = AETheme.colors\n    val radius = AETheme.radius\n    val spacing = AETheme.spacing\n\n    val bg = when {\n        !enabled -> colors.surfaceHover.copy(alpha = 0.5f)\n        selected -> colors.accentMuted\n        else -> colors.surfaceHover\n    }\n    val border = when {\n        selected -> colors.accent\n        else -> colors.border\n    }\n    val textColor = when {\n        !enabled -> colors.textMuted\n        selected -> colors.accent\n        else -> colors.textPrimary\n    }\n\n    val shape = RoundedCornerShape(radius.full)\n    var mod = modifier\n        .clip(shape)\n        .background(bg)\n        .border(1.dp, border, shape)\n\n    if (onClick != null) {\n        mod = mod.clickable(\n            enabled = enabled,\n            interactionSource = interactionSource,\n            indication = null,\n            role = Role.Button,\n            onClick = onClick,\n        )\n    }\n\n    Row(\n        modifier = mod.padding(horizontal = spacing.md, vertical = spacing.xs),\n        verticalAlignment = Alignment.CenterVertically,\n        horizontalArrangement = Arrangement.spacedBy(spacing.xs),\n    ) {\n        if (leadingIcon != null) {\n            AEIcon(token = leadingIcon, size = 14.dp, tint = textColor)\n        }\n        AEText(text = label, style = AETheme.typography.labelMedium, color = textColor)\n        if (trailingIcon != null) {\n            AEIcon(token = trailingIcon, size = 14.dp, tint = textColor)\n        }\n    }\n}"
+    }
+  ]
+}

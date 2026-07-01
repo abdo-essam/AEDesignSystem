@@ -1,0 +1,23 @@
+{
+  "name": "card",
+  "type": "registry:component",
+  "title": "Card",
+  "description": "A container with border, shadow, and structured sections.",
+  "category": "Layout",
+  "version": "0.1.0",
+  "registryDependencies": [
+    "button",
+    "surface"
+  ],
+  "gradleDependencies": [
+    "com.ae.designsystem:foundation:0.1.0"
+  ],
+  "files": [
+    {
+      "name": "AECard.kt",
+      "path": "ui/card/AECard.kt",
+      "type": "registry:component",
+      "content": "package com.ae.designsystem.components.ui.card\n\nimport androidx.compose.foundation.layout.Arrangement\nimport androidx.compose.foundation.layout.Box\nimport androidx.compose.foundation.layout.Column\nimport androidx.compose.foundation.layout.ColumnScope\nimport androidx.compose.foundation.layout.fillMaxWidth\nimport androidx.compose.foundation.layout.padding\nimport androidx.compose.foundation.shape.RoundedCornerShape\nimport androidx.compose.runtime.Composable\nimport androidx.compose.ui.Modifier\nimport androidx.compose.ui.graphics.Color\nimport androidx.compose.ui.graphics.Shape\nimport androidx.compose.ui.unit.Dp\nimport com.ae.designsystem.foundation.theme.AETheme\nimport com.ae.designsystem.components.ui.button.AEButton\nimport com.ae.designsystem.components.ui.surface.AESurface\n\n/**\n * Card component with 3 optional slots: header, content, footer.\n *\n * ```\n * AECard(\n *     header = { Text(\"Title\", style = AETheme.typography.headingSmall) },\n *     footer = { AEButton(onClick = {}) { Text(\"Action\") } },\n * ) {\n *     Text(\"Card body content\")\n * }\n * ```\n *\n * @param modifier Modifier for the card root.\n * @param color Background color.\n * @param shape Corner shape.\n * @param elevation Shadow elevation.\n * @param header Optional header slot, rendered above content.\n * @param footer Optional footer slot, rendered below content.\n * @param content Main content slot.\n */\n@Composable\npublic fun AECard(\n    modifier: Modifier = Modifier,\n    color: Color = AETheme.colors.surface,\n    shape: Shape = RoundedCornerShape(AETheme.radius.lg),\n    elevation: Dp = AETheme.elevation.sm,\n    header: (@Composable () -> Unit)? = null,\n    footer: (@Composable () -> Unit)? = null,\n    content: @Composable ColumnScope.() -> Unit,\n) {\n    val spacing = AETheme.spacing\n\n    AESurface(\n        modifier = modifier,\n        color = color,\n        shape = shape,\n        elevation = elevation,\n    ) {\n        Column(\n            modifier = Modifier\n                .fillMaxWidth()\n                .padding(spacing.lg),\n            verticalArrangement = Arrangement.spacedBy(spacing.md),\n        ) {\n            if (header != null) {\n                Box(modifier = Modifier.fillMaxWidth()) {\n                    header()\n                }\n            }\n\n            content()\n\n            if (footer != null) {\n                Box(modifier = Modifier.fillMaxWidth()) {\n                    footer()\n                }\n            }\n        }\n    }\n}"
+    }
+  ]
+}

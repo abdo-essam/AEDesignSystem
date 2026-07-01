@@ -72,3 +72,8 @@ kotlin-js-store/
 
 Engineering Standards.md
 Mobile Engineering Standards.md
+
+# Generated registry JSON
+composeApp/src/wasmJsMain/resources/r/
+
+buildSrc/.gradle/

@@ -28,6 +28,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
@@ -52,15 +54,20 @@ import com.ae.designsystem.sample.utils.WindowSizeClass
 @Composable
 fun SiteApp() {
     val navController = rememberNavController()
+    val initialRoute = remember { com.ae.designsystem.sample.navigation.resolveInitialRoute() }
     val appViewModel: AppViewModel = viewModel { AppViewModel() }
     val appState by appViewModel.state.collectAsState()
 
     CompositionLocalProvider(
         LocalAppState provides appState,
     ) {
+        val typography = com.ae.designsystem.foundation.typography.AETypography.default(
+            com.ae.designsystem.sample.utils.ThemeUtils.getFontFamily()
+        )
         AETheme(
             palette = AEPalette.Zinc,
             darkTheme = appState.isDark,
+            typography = typography,
         ) {
             Column(
                 modifier = Modifier.fillMaxWidth().background(AETheme.colors.background),
@@ -75,6 +82,7 @@ fun SiteApp() {
 
                 AppNavigation(
                     navController = navController,
+                    initialRoute = initialRoute,
                 )
             }
         }
@@ -90,6 +98,7 @@ private fun TopNavBar(
     val backStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = backStackEntry?.destination?.route ?: ""
     var menuExpanded by remember { mutableStateOf(false) }
+    val uriHandler = LocalUriHandler.current
 
     BoxWithConstraints(modifier = Modifier.fillMaxWidth()) {
         val sizeClass = WindowSizeClass.fromWidth(maxWidth)
@@ -99,65 +108,82 @@ private fun TopNavBar(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(
-                        horizontal = AETheme.spacing.lg,
-                        vertical = AETheme.spacing.sm,
-                    ),
+                    .padding(horizontal = 24.dp, vertical = 12.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween,
             ) {
+                // ── Left: Logo + Nav links ────────────────────────
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(AETheme.spacing.sm),
+                    horizontalArrangement = Arrangement.spacedBy(0.dp),
                 ) {
+                    // Logo
                     AEText(
                         text = "AEDesignSystem",
-                        style = AETheme.typography.headingMedium,
+                        style = AETheme.typography.labelLarge.copy(
+                            fontWeight = FontWeight.SemiBold,
+                        ),
+                        modifier = Modifier.clickable {
+                            navController.navigate(
+                                com.ae.designsystem.sample.navigation.AppNavGraph.HomeRoute
+                            ) {
+                                popUpTo(navController.graph.id) { inclusive = true }
+                                launchSingleTop = true
+                            }
+                        },
                     )
 
+                    // Inline nav links — only on non-compact
                     if (!isCompact) {
-                        Spacer(Modifier.width(AETheme.spacing.md))
-
+                        Spacer(Modifier.width(24.dp))
                         LazyRow(
-                            horizontalArrangement = Arrangement.spacedBy(AETheme.spacing.xs),
+                            horizontalArrangement = Arrangement.spacedBy(4.dp),
                         ) {
                             items(NavEntry.getNavEntries()) { entry ->
                                 val isActive = currentRoute.contains(entry.matchPrefix)
-                                AEButton(
+                                NavLink(
+                                    label = entry.label,
+                                    isActive = isActive,
                                     onClick = { navController.navigate(entry.route) },
-                                    variant = if (isActive) AEButtonVariant.Filled else AEButtonVariant.Ghost,
-                                    size = AEButtonSize.Small,
-                                ) {
-                                    AEText(text = entry.label)
-                                }
+                                )
                             }
                         }
                     }
                 }
 
+                // ── Right: GitHub + dark mode toggle ─────────────
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(AETheme.spacing.xs),
+                    horizontalArrangement = Arrangement.spacedBy(4.dp),
                 ) {
+                    if (!isCompact) {
+                        // GitHub button — outlined like RikkaUI
+                        AEButton(
+                            onClick = { uriHandler.openUri("https://github.com/abdo-essam/AEDesignSystem") },
+                            variant = AEButtonVariant.Outlined,
+                            size = AEButtonSize.Small,
+                        ) {
+                            AEText("GitHub")
+                        }
+                    }
+
+                    // Dark / light mode toggle icon
                     AEButton(
                         onClick = { onDarkChange(!isDark) },
                         variant = AEButtonVariant.Ghost,
                         size = AEButtonSize.Small,
                     ) {
-                        AEIcon(
-                            if (isDark) AEIcons.Sun else AEIcons.Moon,
-                        )
+                        AEIcon(if (isDark) AEIcons.Sun else AEIcons.Moon)
                     }
 
+                    // Hamburger for compact
                     if (isCompact) {
                         AEButton(
                             onClick = { menuExpanded = !menuExpanded },
                             variant = AEButtonVariant.Ghost,
                             size = AEButtonSize.Small,
                         ) {
-                            AEIcon(
-                                if (menuExpanded) AEIcons.Close else AEIcons.Menu,
-                            )
+                            AEIcon(if (menuExpanded) AEIcons.Close else AEIcons.Menu)
                         }
                     }
                 }
@@ -174,6 +200,45 @@ private fun TopNavBar(
     }
 }
 
+/** Plain text nav link — matches RikkaUI's minimal header style. */
+@Composable
+private fun NavLink(
+    label: String,
+    isActive: Boolean,
+    onClick: () -> Unit,
+) {
+    val interactionSource = remember { MutableInteractionSource() }
+    val isHovered by interactionSource.collectIsHoveredAsState()
+
+    Box(
+        modifier = Modifier
+            .clip(RoundedCornerShape(6.dp))
+            .background(
+                when {
+                    isActive -> AETheme.colors.surfaceHover
+                    isHovered -> AETheme.colors.surfaceHover
+                    else -> androidx.compose.ui.graphics.Color.Transparent
+                }
+            )
+            .hoverable(interactionSource)
+            .clickable(
+                interactionSource = interactionSource,
+                indication = null,
+                onClick = onClick,
+            )
+            .padding(horizontal = 12.dp, vertical = 6.dp),
+        contentAlignment = Alignment.Center,
+    ) {
+        AEText(
+            text = label,
+            style = AETheme.typography.labelMedium.copy(
+                fontWeight = if (isActive) FontWeight.Medium else FontWeight.Normal,
+            ),
+            color = if (isActive) AETheme.colors.textPrimary else AETheme.colors.textMuted,
+        )
+    }
+}
+
 @Composable
 private fun MobileMenu(
     navController: NavHostController,
@@ -184,10 +249,7 @@ private fun MobileMenu(
         modifier = Modifier
             .fillMaxWidth()
             .background(AETheme.colors.surface)
-            .padding(
-                horizontal = AETheme.spacing.lg,
-                vertical = AETheme.spacing.sm,
-            ),
+            .padding(horizontal = AETheme.spacing.lg, vertical = AETheme.spacing.sm),
         verticalArrangement = Arrangement.spacedBy(AETheme.spacing.xs),
     ) {
         NavEntry.getNavEntries().forEach { entry ->
@@ -216,12 +278,11 @@ private fun MobileMenuItem(
     val interactionSource = remember { MutableInteractionSource() }
     val isHovered by interactionSource.collectIsHoveredAsState()
 
-    val bg =
-        when {
-            isActive -> AETheme.colors.surfaceHover
-            isHovered -> AETheme.colors.surfaceHover
-            else -> AETheme.colors.surface
-        }
+    val bg = when {
+        isActive -> AETheme.colors.surfaceHover
+        isHovered -> AETheme.colors.surfaceHover
+        else -> AETheme.colors.surface
+    }
 
     Box(
         modifier = Modifier
@@ -234,10 +295,7 @@ private fun MobileMenuItem(
                 indication = null,
                 onClick = onClick,
             )
-            .padding(
-                horizontal = AETheme.spacing.md,
-                vertical = AETheme.spacing.sm,
-            ),
+            .padding(horizontal = AETheme.spacing.md, vertical = AETheme.spacing.sm),
     ) {
         AEText(
             text = label,

@@ -1,0 +1,22 @@
+{
+  "name": "checkbox",
+  "type": "registry:component",
+  "title": "Checkbox",
+  "description": "Standard binary toggle control.",
+  "category": "Forms",
+  "version": "0.1.0",
+  "registryDependencies": [
+    "text"
+  ],
+  "gradleDependencies": [
+    "com.ae.designsystem:foundation:0.1.0"
+  ],
+  "files": [
+    {
+      "name": "AECheckbox.kt",
+      "path": "ui/checkbox/AECheckbox.kt",
+      "type": "registry:component",
+      "content": "package com.ae.designsystem.components.ui.checkbox\n\nimport androidx.compose.animation.animateColorAsState\nimport androidx.compose.animation.core.Spring\nimport androidx.compose.animation.core.spring\nimport androidx.compose.animation.core.tween\nimport androidx.compose.foundation.background\nimport androidx.compose.foundation.border\nimport androidx.compose.foundation.clickable\nimport androidx.compose.foundation.interaction.MutableInteractionSource\nimport androidx.compose.foundation.layout.*\nimport androidx.compose.foundation.shape.RoundedCornerShape\nimport androidx.compose.runtime.*\nimport androidx.compose.ui.Alignment\nimport androidx.compose.ui.Modifier\nimport androidx.compose.ui.draw.clip\nimport androidx.compose.ui.graphics.Color\nimport androidx.compose.ui.semantics.Role\nimport androidx.compose.ui.semantics.role\nimport androidx.compose.ui.semantics.semantics\nimport androidx.compose.ui.semantics.stateDescription\nimport androidx.compose.ui.unit.dp\nimport com.ae.designsystem.foundation.icons.AEIcon\nimport com.ae.designsystem.foundation.icons.AEIcons\nimport com.ae.designsystem.foundation.theme.AETheme\nimport com.ae.designsystem.components.ui.text.AEText\n\n/**\n * Checkbox component — token-driven, zero Material3.\n *\n * ```\n * var checked by remember { mutableStateOf(false) }\n * AECheckbox(\n *     checked = checked,\n *     onCheckedChange = { checked = it },\n *     label = \"Accept terms\",\n * )\n * ```\n */\n@Composable\npublic fun AECheckbox(\n    checked: Boolean,\n    onCheckedChange: (Boolean) -> Unit,\n    modifier: Modifier = Modifier,\n    label: String? = null,\n    enabled: Boolean = true,\n    interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },\n) {\n    val colors = AETheme.colors\n    val radius = AETheme.radius\n    val spacing = AETheme.spacing\n    val motion = AETheme.motion\n\n    val boxColor by animateColorAsState(\n        targetValue = when {\n            !enabled -> if (checked) colors.textMuted else Color.Transparent\n            checked -> colors.accent\n            else -> Color.Transparent\n        },\n        animationSpec = tween(motion.durationFast),\n        label = \"checkboxColor\",\n    )\n\n    val borderColor by animateColorAsState(\n        targetValue = when {\n            !enabled -> colors.textMuted.copy(alpha = 0.4f)\n            checked -> colors.accent\n            else -> colors.border\n        },\n        animationSpec = tween(motion.durationFast),\n        label = \"checkboxBorder\",\n    )\n\n    Row(\n        modifier = modifier\n            .clickable(\n                enabled = enabled,\n                interactionSource = interactionSource,\n                indication = null,\n                role = Role.Checkbox,\n                onClick = { onCheckedChange(!checked) },\n            )\n            .semantics {\n                role = Role.Checkbox\n                stateDescription = if (checked) \"Checked\" else \"Unchecked\"\n            },\n        verticalAlignment = Alignment.CenterVertically,\n        horizontalArrangement = Arrangement.spacedBy(spacing.sm),\n    ) {\n        // Checkbox box\n        Box(\n            modifier = Modifier\n                .size(20.dp)\n                .clip(RoundedCornerShape(radius.sm))\n                .background(boxColor)\n                .border(1.5.dp, borderColor, RoundedCornerShape(radius.sm)),\n            contentAlignment = Alignment.Center,\n        ) {\n            if (checked) {\n                AEIcon(\n                    token = AEIcons.Check,\n                    tint = if (enabled) colors.textOnAccent else colors.textMuted,\n                    size = 12.dp,\n                )\n            }\n        }\n\n        if (label != null) {\n            AEText(\n                text = label,\n                style = AETheme.typography.bodyMedium,\n                color = if (enabled) colors.textPrimary else colors.textMuted,\n            )\n        }\n    }\n}"
+    }
+  ]
+}

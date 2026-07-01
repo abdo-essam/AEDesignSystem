@@ -1,6 +1,7 @@
 package com.ae.designsystem.sample.theme
 
 import com.ae.designsystem.sample.ThemeConfiguration
+import com.ae.designsystem.foundation.theme.AETheme
 
 /**
  * Pure function — converts a [ThemeConfiguration] to a formatted string
